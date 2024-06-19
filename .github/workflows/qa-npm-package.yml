@@ -2,6 +2,12 @@ name: QA
 
 on:
   workflow_call:
+    inputs:
+      has_mkdocs:
+        default: false
+        description: Does this project use mkdocs?
+        required: false
+        type: boolean
 
 env:
   # renovate: datasource=node-version depName=node versioning=node
@@ -70,3 +76,22 @@ jobs:
         run: yarn build
       - name: Test
         run: yarn test
+
+  qa-docs:
+    if: inputs.has_mkdocs
+    uses: ./.github/workflows/qa-mkdocs.yml
+
+  qa-successful:
+    needs:
+      - qa
+      - qa-docs
+    name: Evaluate QA results
+    if: ( success() || failure() )
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Success
+        if: ${{ !(contains(needs.*.result, 'failure')) }}
+        run: exit 0
+      - name: Failure
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
