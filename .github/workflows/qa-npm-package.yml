@@ -4,21 +4,39 @@ on:
   workflow_call:
 
 env:
-  # renovate: datasource=docker depName=node versioning=node
-  NODE_VERSION: "20.14.0"
+  # renovate: datasource=node-version depName=node versioning=node
+  NODE_LTS_VERSION: "20.14.0"
+  # renovate: datasource=node-version depName=node versioning=node
+  NODE_VERSION: "22.3.0"
 
 jobs:
+  versions:
+    name: Versions
+    outputs:
+      NODE_LTS_VERSION: ${{ env.NODE_LTS_VERSION }}
+      NODE_VERSION: ${{ env.NODE_VERSION }}
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Generate outputs
+        run: |
+          echo "NODE_LTS_VERSION=${{ env.NODE_LTS_VERSION }}" >> $GITHUB_OUTPUT
+          echo "NODE_VERSION=${{ env.NODE_VERSION }}" >> $GITHUB_OUTPUT
+
   qa:
     name: Run QA
+    needs: versions
     permissions:
       contents: read
       packages: read
     runs-on: ${{ matrix.os-release }}
     strategy:
       matrix:
+        node-version:
+          - 18
+          - ${{ needs.versions.outputs.NODE_LTS_VERSION }}
+          - ${{ needs.versions.outputs.NODE_VERSION }}
         os-release:
           - ubuntu-22.04
-          - ubuntu-24.04
           - windows-2022
 
     steps:
