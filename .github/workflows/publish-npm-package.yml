@@ -1,0 +1,120 @@
+name: Publish
+
+on:
+  workflow_call:
+    inputs:
+      is-canary:
+        default: true
+        description: Is this a preview release?
+        required: false
+        type: boolean
+      publish-script:
+        default: ""
+        description: Shell code to run to prepare the package for publishing.
+        required: false
+        type: string
+      registry-url:
+        default: https://registry.npmjs.org
+        description: npm package registry URL to publish to.
+        required: false
+        type: string
+      with-github-release:
+        default: false
+        description: Should we create a GitHub release?
+        required: false
+        type: boolean
+    secrets:
+      NPM_TOKEN:
+        description: A personal access token to publish the package with.
+        required: true
+
+concurrency: publish
+
+env:
+  # renovate: datasource=node-version depName=node versioning=node
+  NODE_VERSION: "22.3.0"
+
+jobs:
+  publish:
+    if: github.ref_name == github.event.repository.default_branch
+    name: Publish
+    permissions:
+      contents: write
+      id-token: write
+      packages: write
+      pull-requests: read
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+
+      - name: Select NodeJS version
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: ${{ inputs.registry-url }}
+
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          yarn config set enableGlobalCache false
+
+      - name: Load cached dependencies
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
+        with:
+          path: .yarn/cache
+          key: ${{ runner.os }}-node${{ env.NODE_VERSION }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Set canary release version
+        if: success() && inputs.is-canary
+        run: |
+          RELEASE_VERSION=$(yarn nextversion --canary=patch)
+          echo "RELEASE_VERSION=$RELEASE_VERSION" | tee $GITHUB_ENV
+
+      - name: Set release version
+        if: success() && !inputs.is-canary
+        run: |
+          RELEASE_VERSION=$(yarn nextversion)
+          echo "RELEASE_VERSION=$RELEASE_VERSION" | tee $GITHUB_ENV
+
+      - name: Publish package
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          ${{ inputs.publish-script }}
+          npm --no-git-tag-version --ignore-scripts version ${{ env.RELEASE_VERSION }}
+          npm publish --access=public --provenance --tag=${{ inputs.is-canary && 'next' || 'latest' }}
+
+      - name: Generate SBOM
+        if: success() && inputs.with-github-release
+        uses: anchore/sbom-action@e8d2a6937ecead383dfe75190d104edd1f9c5751 # v0
+        with:
+          format: spdx-json
+          output-file: sbom.spdx.json
+          upload-artifact: false
+          upload-release-assets: false
+
+      - name: Prepare GitHub release
+        if: success() && inputs.with-github-release
+        run: |
+          PACKAGE_NAME=$(jq --raw-output .name < package.json)
+          echo "PACKAGE_NAME=$PACKAGE_NAME" | tee $GITHUB_ENV
+
+      - name: Generate GitHub release
+        if: success() && inputs.with-github-release
+        uses: oliversalzburg/action-automatic-semantic-releases@bc429dc1af8c036b5f8c11fef7bcb0becfd5064d # v0.0.13
+        with:
+          automatic_release_tag: ${{ inputs.is-canary && 'next' }}
+          body_prefix: |
+            Published at <https://www.npmjs.com/package/${{ env.PACKAGE_NAME }}/v/${{ env.RELEASE_VERSION }}>.
+          draft: ${{ !inputs.is-canary }}
+          files: sbom.spdx.json
+          prerelease: ${{ inputs.is-canary }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          title: Snapshot Build v${{ env.RELEASE_VERSION }}
