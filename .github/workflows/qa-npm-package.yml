@@ -79,6 +79,7 @@ jobs:
 
   qa-docs:
     if: inputs.has_mkdocs
+    name: 🔹 Documentation QA
     uses: ./.github/workflows/qa-mkdocs.yml
 
   qa-successful:

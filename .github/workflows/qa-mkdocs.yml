@@ -8,8 +8,8 @@ env:
   PYTHON_VERSION: "3.12.4"
 
 jobs:
-  qa-docs:
-    name: QA Documentation
+  qa:
+    name: Run QA
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
