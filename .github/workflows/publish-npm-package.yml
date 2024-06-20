@@ -116,4 +116,4 @@ jobs:
           files: sbom.spdx.json
           prerelease: ${{ inputs.is-canary }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          title: Snapshot Build v${{ env.RELEASE_VERSION }}
+          title: ${{ inputs.is-canary && 'Snapshot Build ' || '' }}v${{ env.RELEASE_VERSION }}
