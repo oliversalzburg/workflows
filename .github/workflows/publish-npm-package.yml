@@ -3,6 +3,11 @@ name: Publish
 on:
   workflow_call:
     inputs:
+      has_mkdocs:
+        default: false
+        description: Does this project use mkdocs?
+        required: false
+        type: boolean
       is-canary:
         default: true
         description: Is this a preview release?
@@ -117,3 +122,8 @@ jobs:
           prerelease: ${{ inputs.is-canary }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           title: ${{ inputs.is-canary && 'Snapshot Build ' || '' }}v${{ env.RELEASE_VERSION }}
+
+  publish-docs:
+    if: inputs.has_mkdocs
+    name: 🔹 Documentation Publish
+    uses: ./.github/workflows/frag-publish-mkdocs.yml
