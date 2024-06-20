@@ -36,7 +36,6 @@ env:
 
 jobs:
   publish:
-    if: github.ref_name == github.event.repository.default_branch
     name: Publish
     permissions:
       contents: write
