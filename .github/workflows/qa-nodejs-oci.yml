@@ -2,6 +2,12 @@ name: QA
 
 on:
   workflow_call:
+    inputs:
+      artifact-contents:
+        default: ""
+        description: List of paths to put into the `build-output` artifact.
+        required: false
+        type: string
 
 env:
   # renovate: datasource=docker depName=node versioning=node
@@ -46,6 +52,27 @@ jobs:
         run: yarn build
       - name: Test
         run: yarn test
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@d70bba72b1f3fd22344832f00baa16ece964efeb # v3
+
+      - name: Build
+        env:
+          SOURCE_DATE_EPOCH: 0
+        uses: docker/build-push-action@c382f710d39a5bb4e430307530a720f50c2d3318 # v6
+        with:
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ github.repository }}/cache
+          context: .
+          platforms: linux/amd64
+          provenance: false
+          push: false
+
+      - if: inputs.artifact-contents != ''
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4
+        with:
+          name: build-output
+          path: ${{ inputs.artifact-contents }}
+          retention-days: 1
 
   qa-passed:
     needs:

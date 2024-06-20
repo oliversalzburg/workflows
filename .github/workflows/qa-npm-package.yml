@@ -8,6 +8,11 @@ on:
         description: Does this project use mkdocs?
         required: false
         type: boolean
+      is-oci-target:
+        default: false
+        description: Does this project produce an OCI image from its primary output, and that is the primary _published_ artifact?
+        required: false
+        type: boolean
       registry:
         default: ghcr.io
         description: The domain name of the OCI registry to use.
