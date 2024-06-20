@@ -105,7 +105,7 @@ jobs:
         uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
 
       - name: Generate SBOM
-        if: success() && inputs.with-github-release
+        if: success() && inputs.wants-github-release
         uses: anchore/sbom-action@e8d2a6937ecead383dfe75190d104edd1f9c5751 # v0
         with:
           format: spdx-json
@@ -114,13 +114,13 @@ jobs:
           upload-release-assets: false
 
       - name: Prepare GitHub release
-        if: success() && inputs.with-github-release
+        if: success() && inputs.wants-github-release
         run: |
           PACKAGE_NAME=$(jq --raw-output .name < package.json)
           echo "PACKAGE_NAME=$PACKAGE_NAME" | tee $GITHUB_ENV
 
       - name: Generate GitHub release
-        if: success() && inputs.with-github-release
+        if: success() && inputs.wants-github-release
         uses: oliversalzburg/action-automatic-semantic-releases@bc429dc1af8c036b5f8c11fef7bcb0becfd5064d # v0.0.13
         with:
           automatic_release_tag: ${{ inputs.is-canary && 'next' || null }}
