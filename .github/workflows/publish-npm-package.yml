@@ -87,7 +87,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           ${{ inputs.publish-script }}
-          npm --no-git-tag-version --ignore-scripts version ${{ env.RELEASE_VERSION }}
+          npm --allow-same-version --ignore-scripts --no-git-tag-version version ${{ env.RELEASE_VERSION }}
           npm publish --access=public --provenance --tag=${{ inputs.is-canary && 'next' || 'latest' }}
 
       - name: Generate SBOM
