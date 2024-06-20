@@ -109,7 +109,7 @@ jobs:
         if: success() && inputs.with-github-release
         uses: oliversalzburg/action-automatic-semantic-releases@bc429dc1af8c036b5f8c11fef7bcb0becfd5064d # v0.0.13
         with:
-          automatic_release_tag: ${{ inputs.is-canary && 'next' }}
+          automatic_release_tag: ${{ inputs.is-canary && 'next' || null }}
           body_prefix: |
             Published at <https://www.npmjs.com/package/${{ env.PACKAGE_NAME }}/v/${{ env.RELEASE_VERSION }}>.
           draft: ${{ !inputs.is-canary }}
