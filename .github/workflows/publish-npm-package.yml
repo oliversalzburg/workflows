@@ -8,6 +8,11 @@ on:
         description: Does this project use mkdocs?
         required: false
         type: boolean
+      has-github-pages:
+        default: false
+        description: Does this project produce a `_site` directory to be uploaded to GitHub Pages?
+        required: false
+        type: boolean
       is-canary:
         default: true
         description: Is this a preview release?
@@ -95,6 +100,9 @@ jobs:
           npm --allow-same-version --ignore-scripts --no-git-tag-version version ${{ env.RELEASE_VERSION }}
           npm publish --access=public --provenance --tag=${{ inputs.is-canary && 'next' || 'latest' }}
 
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
+
       - name: Generate SBOM
         if: success() && inputs.with-github-release
         uses: anchore/sbom-action@e8d2a6937ecead383dfe75190d104edd1f9c5751 # v0
@@ -123,7 +131,12 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           title: ${{ inputs.is-canary && 'Snapshot Build ' || '' }}v${{ env.RELEASE_VERSION }}
 
-  publish-docs:
-    if: inputs.has_mkdocs
+  publish-mkdocs:
+    if: inputs.has-mkdocs && !inputs.is-canary
     name: 🔹 Documentation Publish
     uses: ./.github/workflows/frag-publish-mkdocs.yml
+  publish-site:
+    if: inputs.has-github-pages && !inputs.is-canary
+    name: 🔹 Documentation Publish
+    needs: publish
+    uses: ./.github/workflows/frag-publish-site.yml
