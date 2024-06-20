@@ -8,6 +8,11 @@ on:
         description: Does this project use mkdocs?
         required: false
         type: boolean
+      registry:
+        default: ghcr.io
+        description: The domain name of the OCI registry to use.
+        required: false
+        type: string
 
 env:
   # renovate: datasource=node-version depName=node versioning=node
