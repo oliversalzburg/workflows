@@ -7,11 +7,16 @@ concurrency:
   group: docs-deploy
   cancel-in-progress: true
 
+env:
+  # renovate: datasource=docker depName=python versioning=semver
+  PYTHON_VERSION: "3.12.4"
+
 jobs:
   publish:
     name: Publish
     runs-on: ubuntu-22.04
     permissions:
+      # mkdocs gh-deploy uses the old gh-pages branch method to publish Pages.
       contents: write
     steps:
       - name: Checkout
@@ -19,9 +24,6 @@ jobs:
 
       - name: Select Python version
         uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5
-        env:
-          # renovate: datasource=docker depName=python versioning=semver
-          PYTHON_VERSION: "3.12.4"
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 

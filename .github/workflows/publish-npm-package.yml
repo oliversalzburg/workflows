@@ -101,6 +101,7 @@ jobs:
           npm publish --access=public --provenance --tag=${{ inputs.is-canary && 'next' || 'latest' }}
 
       - name: Upload GitHub Pages artifact
+        if: inputs.has-github-pages
         uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
 
       - name: Generate SBOM
@@ -135,8 +136,16 @@ jobs:
     if: inputs.has-mkdocs && !inputs.is-canary
     name: 🔹 Documentation Publish
     uses: ./.github/workflows/frag-publish-mkdocs.yml
+
   publish-site:
     if: inputs.has-github-pages && !inputs.is-canary
-    name: 🔹 Documentation Publish
+    name: Documentation Publish
     needs: publish
-    uses: ./.github/workflows/frag-publish-site.yml
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      id-token: write
+      pages: write
+    steps:
+      - name: Upload GitHub Pages artifact
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
