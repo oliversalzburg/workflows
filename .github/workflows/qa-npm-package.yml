@@ -80,19 +80,19 @@ jobs:
   qa-docs:
     if: inputs.has_mkdocs
     name: 🔹 Documentation QA
-    uses: ./.github/workflows/qa-mkdocs.yml
+    uses: ./.github/workflows/frag-qa-mkdocs.yml
 
-  qa-successful:
+  qa-passed:
     needs:
       - qa
       - qa-docs
-    name: Evaluate QA results
+    name: QA Passed
     if: always()
     runs-on: ubuntu-22.04
     steps:
-      - name: Success
-        if: ${{ !(contains(needs.*.result, 'failure')) }}
-        run: exit 0
       - name: Failure
         if: ${{ contains(needs.*.result, 'failure') }}
         run: exit 1
+      - name: Success
+        if: ${{ success() && !(contains(needs.*.result, 'failure')) }}
+        run: exit 0
