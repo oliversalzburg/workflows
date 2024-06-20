@@ -3,7 +3,7 @@ name: QA
 on:
   workflow_call:
     inputs:
-      has_mkdocs:
+      has-mkdocs:
         default: false
         description: Does this project use mkdocs?
         required: false

@@ -3,7 +3,7 @@ name: Publish
 on:
   workflow_call:
     inputs:
-      has_mkdocs:
+      has-mkdocs:
         default: false
         description: Does this project use mkdocs?
         required: false
@@ -23,7 +23,7 @@ on:
         description: npm package registry URL to publish to.
         required: false
         type: string
-      with-github-release:
+      wants-github-release:
         default: false
         description: Should we create a GitHub release?
         required: false
