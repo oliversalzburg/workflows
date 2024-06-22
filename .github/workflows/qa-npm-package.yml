@@ -13,6 +13,11 @@ on:
         description: Does this project produce an OCI image from its primary output, and that is the primary _published_ artifact?
         required: false
         type: boolean
+      mkdocs-working-directory:
+        default: "."
+        description: Where is the `mkdocs.yml` file located?
+        required: false
+        type: string
       registry:
         default: ghcr.io
         description: The domain name of the OCI registry to use.
@@ -88,7 +93,7 @@ jobs:
         run: yarn test
 
   qa-docs:
-    if: inputs.has_mkdocs
+    if: inputs.has-mkdocs
     name: 🔹 Documentation QA
     uses: ./.github/workflows/frag-qa-mkdocs.yml
 
