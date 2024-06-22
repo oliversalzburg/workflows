@@ -88,14 +88,6 @@ jobs:
           RELEASE_VERSION=$(yarn nextversion)
           echo "RELEASE_VERSION=$RELEASE_VERSION" | tee $GITHUB_ENV
 
-      - name: Publish package
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          ${{ inputs.publish-script }}
-          npm --allow-same-version --ignore-scripts --no-git-tag-version version ${{ env.RELEASE_VERSION }}
-          npm publish --access=public --provenance --tag=${{ inputs.is-canary && 'next' || 'latest' }}
-
       - name: Upload GitHub Pages artifact
         if: inputs.has-github-pages
         uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
@@ -120,8 +112,6 @@ jobs:
         uses: oliversalzburg/action-automatic-semantic-releases@bc429dc1af8c036b5f8c11fef7bcb0becfd5064d # v0.0.13
         with:
           automatic_release_tag: ${{ inputs.is-canary && 'next' || null }}
-          body_prefix: |
-            Published at <https://www.npmjs.com/package/${{ env.PACKAGE_NAME }}/v/${{ env.RELEASE_VERSION }}>.
           draft: ${{ !inputs.is-canary }}
           files: sbom.spdx.json
           prerelease: ${{ inputs.is-canary }}
