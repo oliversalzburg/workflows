@@ -96,6 +96,8 @@ jobs:
     if: inputs.has-mkdocs
     name: 🔹 Documentation QA
     uses: ./.github/workflows/frag-qa-mkdocs.yml
+    with:
+      working-directory: ${{ inputs.mkdocs-working-directory }}
 
   qa-passed:
     needs:
