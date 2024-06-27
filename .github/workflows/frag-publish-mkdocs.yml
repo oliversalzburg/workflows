@@ -8,7 +8,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # renovate: datasource=docker depName=python versioning=semver
+  # renovate: datasource=python-version depName=python versioning=python
   PYTHON_VERSION: "3.12.4"
 
 jobs:

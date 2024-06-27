@@ -10,7 +10,7 @@ on:
         type: string
 
 env:
-  # renovate: datasource=docker depName=node versioning=node
+  # renovate: datasource=node-version depName=node versioning=node
   NODE_VERSION: "22.3.0"
 
 jobs:
