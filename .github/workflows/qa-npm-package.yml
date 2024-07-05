@@ -92,9 +92,9 @@ jobs:
       - name: Test
         run: yarn test
 
-  qa-docs:
+  qa-mkdocs:
     if: inputs.has-mkdocs
-    name: 🔹 Documentation QA
+    name: 🔹 MkDocs
     uses: ./.github/workflows/frag-qa-mkdocs.yml
     with:
       working-directory: ${{ inputs.mkdocs-working-directory }}
