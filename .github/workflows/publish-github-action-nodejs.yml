@@ -76,6 +76,11 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Check build integrity
+        run: |
+          yarn build:export
+          git diff --exit-code lib
+
       - name: Set canary release version
         if: success() && inputs.is-canary
         run: |
@@ -120,12 +125,12 @@ jobs:
 
   publish-mkdocs:
     if: inputs.has-mkdocs && !inputs.is-canary
-    name: 🔹 Documentation Publish
+    name: 🔹 MkDocs
     uses: ./.github/workflows/frag-publish-mkdocs.yml
 
   publish-site:
     if: inputs.has-github-pages && !inputs.is-canary
-    name: Documentation Publish
+    name: GitHub Pages
     needs: publish
     runs-on: ubuntu-22.04
     permissions:
