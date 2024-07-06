@@ -102,7 +102,7 @@ jobs:
   qa-passed:
     needs:
       - qa
-      - qa-docs
+      - qa-mkdocs
     name: QA Passed
     if: always()
     runs-on: ubuntu-22.04
