@@ -97,8 +97,10 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           ${{ inputs.publish-script }}
+          echo "PUBLISH_URL=https://www.npmjs.com/package/${{ env.PACKAGE_NAME }}/v/${{ env.RELEASE_VERSION }}" | tee $GITHUB_ENV
           npm --allow-same-version --ignore-scripts --no-git-tag-version version ${{ env.RELEASE_VERSION }}
           npm publish --access=public --provenance --tag=${{ inputs.is-canary && 'next' || 'latest' }}
+          echo "Published npm package to <${{ env.PUBLISH_URL }}>" >> $GITHUB_STEP_SUMMARY
 
       - name: Upload GitHub Pages artifact
         if: inputs.has-github-pages
@@ -125,7 +127,7 @@ jobs:
         with:
           automatic_release_tag: ${{ inputs.is-canary && 'next' || null }}
           body_prefix: |
-            Published at <https://www.npmjs.com/package/${{ env.PACKAGE_NAME }}/v/${{ env.RELEASE_VERSION }}>.
+            Published at <${{ env.PUBLISH_URL }}>.
           draft: ${{ !inputs.is-canary }}
           files: sbom.spdx.json
           prerelease: ${{ inputs.is-canary }}
