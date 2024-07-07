@@ -80,11 +80,6 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Set package name
-        run: |
-          PACKAGE_NAME=$(jq --raw-output .name < package.json)
-          echo "PACKAGE_NAME=$PACKAGE_NAME" | tee $GITHUB_ENV
-
       - name: Set canary release version
         if: success() && inputs.is-canary
         run: |
@@ -97,12 +92,17 @@ jobs:
           RELEASE_VERSION=$(yarn nextversion)
           echo "RELEASE_VERSION=$RELEASE_VERSION" | tee $GITHUB_ENV
 
+      - name: Set package details
+        run: |
+          PACKAGE_NAME=$(jq --raw-output .name < package.json)
+          echo "PACKAGE_NAME=$PACKAGE_NAME" | tee $GITHUB_ENV
+          echo "PUBLISH_URL=https://www.npmjs.com/package/$PACKAGE_NAME/v/${{ env.RELEASE_VERSION }}" | tee $GITHUB_ENV
+
       - name: Publish package
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           ${{ inputs.publish-script }}
-          echo "PUBLISH_URL=https://www.npmjs.com/package/${{ env.PACKAGE_NAME }}/v/${{ env.RELEASE_VERSION }}" | tee $GITHUB_ENV
           npm --allow-same-version --ignore-scripts --no-git-tag-version version ${{ env.RELEASE_VERSION }}
           npm publish --access=public --provenance --tag=${{ inputs.is-canary && 'next' || 'latest' }}
           echo "Published npm package to <${{ env.PUBLISH_URL }}>" >> $GITHUB_STEP_SUMMARY
