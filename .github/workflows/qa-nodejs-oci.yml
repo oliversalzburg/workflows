@@ -11,7 +11,7 @@ on:
 
 env:
   # renovate: datasource=node-version depName=node versioning=node
-  NODE_VERSION: "22.4.0"
+  NODE_VERSION: "22.4.1"
 
 jobs:
   qa:
