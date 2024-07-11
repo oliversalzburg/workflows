@@ -118,7 +118,7 @@ jobs:
 
       - name: Grype scan
         if: ${{ inputs.push }}
-        uses: anchore/scan-action@3343887d815d7b07465f6fdcd395bd66508d486a # v3
+        uses: anchore/scan-action@04b73ec0bba3de85519c4ec634bffedead788f96 # v4
         id: scan
         with:
           add-cpes-if-none: true
