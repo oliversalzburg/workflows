@@ -107,7 +107,7 @@ jobs:
 
       - name: Generate SBOM
         if: ${{ inputs.push }}
-        uses: anchore/sbom-action@95b086ac308035dc0850b3853be5b7ab108236a8 # v0
+        uses: anchore/sbom-action@d94f46e13c6c62f59525ac9a1e147a99dc0b9bf5 # v0
         with:
           artifact-name: ${{ inputs.image_tag }}.sbom.spdx.json
           format: spdx-json
