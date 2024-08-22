@@ -1,0 +1,25 @@
+name: QA Internal
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  frag-qa-mkdocs:
+    uses: ./.github/workflows/frag-qa-mkdocs.yml
+    with:
+      working-directory: test
+
+  qa-passed-internal:
+    needs:
+      - frag-qa-mkdocs
+    name: QA Passed Interal
+    if: always()
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Failure
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
+      - name: Success
+        if: ${{ success() && !(contains(needs.*.result, 'failure')) }}
+        run: exit 0
