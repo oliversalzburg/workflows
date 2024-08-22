@@ -2,6 +2,12 @@ name: QA
 
 on:
   workflow_call:
+    inputs:
+      working-directory:
+        default: "."
+        description: Where is the `package.json` file located?
+        required: false
+        type: string
 
 env:
   # renovate: datasource=node-version depName=node versioning=node
@@ -39,13 +45,17 @@ jobs:
 
       - name: Install dependencies
         run: yarn install
+        working-directory: ${{ inputs.working-directory }}
 
       - name: Lint
         run: yarn lint
+        working-directory: ${{ inputs.working-directory }}
       - name: Build
         run: yarn build
+        working-directory: ${{ inputs.working-directory }}
       - name: Test
         run: yarn test
+        working-directory: ${{ inputs.working-directory }}
 
   qa-passed:
     needs:

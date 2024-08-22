@@ -9,10 +9,15 @@ jobs:
     uses: ./.github/workflows/frag-qa-mkdocs.yml
     with:
       working-directory: test
+  qa-browser-app:
+    uses: ./.github/workflows/qa-browser-app.yml
+    with:
+      working-directory: test
 
   qa-passed-internal:
     needs:
       - frag-qa-mkdocs
+      - qa-browser-app
     name: QA Passed Interal
     if: always()
     runs-on: ubuntu-22.04

@@ -1,0 +1,17 @@
+{
+  "name": "test",
+  "private": true,
+  "version": "0.0.1",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build": "echo No build",
+    "lint": "echo No lint",
+    "test": "echo No tests"
+  },
+  "author": "Oliver Salzburg <oliver.salzburg@gmail.com>",
+  "license": "MIT",
+  "description": ""
+}
