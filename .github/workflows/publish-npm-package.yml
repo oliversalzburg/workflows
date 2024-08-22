@@ -42,7 +42,7 @@ concurrency: publish
 
 env:
   # renovate: datasource=node-version depName=node versioning=node
-  NODE_VERSION: "22.6.0"
+  NODE_VERSION: "22.7.0"
 
 jobs:
   publish:
