@@ -47,11 +47,11 @@ jobs:
         run: yarn install
         working-directory: ${{ inputs.working-directory }}
 
-      - name: Lint
-        run: yarn lint
-        working-directory: ${{ inputs.working-directory }}
       - name: Build
         run: yarn build
+        working-directory: ${{ inputs.working-directory }}
+      - name: Lint
+        run: yarn lint
         working-directory: ${{ inputs.working-directory }}
       - name: Test
         run: yarn test
