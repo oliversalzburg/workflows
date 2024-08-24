@@ -8,6 +8,16 @@ on:
         description: List of paths to put into the `build-output` artifact.
         required: false
         type: string
+      containerfile:
+        default: "Dockerfile"
+        description: "The name of the container image manifest. Relative to the working-directory."
+        required: false
+        type: string
+      working-directory:
+        default: "."
+        description: Where is the `package.json` file located?
+        required: false
+        type: string
 
 env:
   # renovate: datasource=node-version depName=node versioning=node
@@ -45,13 +55,17 @@ jobs:
 
       - name: Install dependencies
         run: yarn install
+        working-directory: ${{ inputs.working-directory }}
 
       - name: Lint
         run: yarn lint
+        working-directory: ${{ inputs.working-directory }}
       - name: Build
         run: yarn build
+        working-directory: ${{ inputs.working-directory }}
       - name: Test
         run: yarn test
+        working-directory: ${{ inputs.working-directory }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@988b5a0280414f521da01fcc63a27aeeb4b104db # v3
@@ -62,7 +76,8 @@ jobs:
         uses: docker/build-push-action@5cd11c3a4ced054e52742c5fd54dca954e0edd85 # v6
         with:
           cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ github.repository }}/cache
-          context: .
+          context: ${{ inputs.working-directory }}
+          file: ${{ inputs.working-directory }}/${{ inputs.containerfile }}
           platforms: linux/amd64
           provenance: false
           push: false

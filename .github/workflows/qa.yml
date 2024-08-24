@@ -13,11 +13,17 @@ jobs:
     uses: ./.github/workflows/qa-browser-app.yml
     with:
       working-directory: test
+  qa-nodejs-oci:
+    uses: ./.github/workflows/qa-nodejs-oci.yml
+    with:
+      containerfile: Containerfile
+      working-directory: test
 
   qa-passed-internal:
     needs:
       - frag-qa-mkdocs
       - qa-browser-app
+      - qa-nodejs-oci
     name: QA Passed Interal
     if: always()
     runs-on: ubuntu-22.04
