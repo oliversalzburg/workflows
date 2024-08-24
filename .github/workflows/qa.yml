@@ -17,6 +17,7 @@ jobs:
     uses: ./.github/workflows/qa-nodejs-oci.yml
     with:
       containerfile: Containerfile
+      context: test
       working-directory: test
 
   qa-passed-internal:
