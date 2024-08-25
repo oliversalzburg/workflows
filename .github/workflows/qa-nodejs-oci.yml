@@ -8,6 +8,11 @@ on:
         description: List of paths to put into the `build-output` artifact.
         required: false
         type: string
+      artifact-name:
+        default: build-output
+        description: "The name that should be assigned to the build output artifact."
+        required: false
+        type: string
       containerfile:
         default: "Dockerfile"
         description: "The name of the container image manifest. Relative to the `context`."
@@ -90,7 +95,7 @@ jobs:
       - if: inputs.artifact-contents != ''
         uses: actions/upload-artifact@834a144ee995460fba8ed112a2fc961b36a5ec5a # v4
         with:
-          name: build-output
+          name: ${{ inputs.artifact-name }}
           path: ${{ inputs.artifact-contents }}
           retention-days: 1
 
