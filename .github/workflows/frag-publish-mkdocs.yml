@@ -2,6 +2,12 @@ name: Publish
 
 on:
   workflow_call:
+    inputs:
+      working-directory:
+        default: "."
+        description: Where is the `mkdocs.yml` file located?
+        required: false
+        type: string
 
 concurrency:
   group: docs-deploy
@@ -27,8 +33,8 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Install mkdocs-material
-        run: pip install mkdocs-material
-
       - name: Build/deploy documentation
-        run: mkdocs gh-deploy --force
+        run: |
+          cd "${{ inputs.working-directory }}"
+          pip install mkdocs-material
+          mkdocs gh-deploy --force

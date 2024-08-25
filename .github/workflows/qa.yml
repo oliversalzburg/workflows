@@ -5,6 +5,12 @@ on:
   pull_request:
 
 jobs:
+  frag-publish-mkdocs:
+    permissions:
+      contents: write
+    uses: ./.github/workflows/frag-publish-mkdocs.yml
+    with:
+      working-directory: test
   frag-qa-mkdocs:
     uses: ./.github/workflows/frag-qa-mkdocs.yml
     with:
@@ -22,6 +28,7 @@ jobs:
 
   qa-passed-internal:
     needs:
+      - frag-publish-mkdocs
       - frag-qa-mkdocs
       - qa-browser-app
       - qa-nodejs-oci
