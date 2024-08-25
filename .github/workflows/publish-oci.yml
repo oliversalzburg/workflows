@@ -127,10 +127,9 @@ jobs:
         if: ${{ inputs.push }}
         uses: anchore/sbom-action@61119d458adab75f756bc0b9e4bde25725f86a7a # v0
         with:
-          artifact-name: ${{ inputs.image_tag }}.sbom.spdx.json
+          artifact-name: ${{ inputs.image_title }}-${{ inputs.image_tag }}.sbom.spdx.json
           format: spdx-json
           image: ${{ inputs.registry }}/${{ inputs.image_name }}:${{ inputs.image_tag }}
-          output-file: ${{ inputs.image_tag }}.sbom.spdx.json
           upload-artifact: true
           upload-release-assets: false
 
@@ -148,7 +147,7 @@ jobs:
         if: ${{ inputs.push }}
         uses: actions/upload-artifact@834a144ee995460fba8ed112a2fc961b36a5ec5a # v4
         with:
-          name: ${{ inputs.image_tag }}.sarif.json
+          name: ${{ inputs.image_title }}-${{ inputs.image_tag }}.sarif.json
           path: ${{ steps.scan.outputs.sarif }}
 
       - name: Upload scan report
@@ -165,5 +164,5 @@ jobs:
         with:
           subject-name: ${{ inputs.registry }}/${{ inputs.image_name }}
           subject-digest: ${{ steps.build.outputs.digest }}
-          sbom-path: ${{ inputs.image_tag }}.sbom.spdx.json
+          sbom-path: ${{ inputs.image_title }}-${{ inputs.image_tag }}.sbom.spdx.json
           push-to-registry: true
