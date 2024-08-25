@@ -10,6 +10,7 @@ on:
         type: string
       attest:
         default: true
+        description: "Should we have the SBOM for the image attested?"
         required: false
         type: boolean
       build_args:
@@ -26,27 +27,34 @@ on:
         required: false
         type: string
       image_description:
+        description: "Value for `org.opencontainers.image.description`."
         required: false
         type: string
       image_name:
+        description: "The name of the image, including scope."
         required: true
         type: string
       image_tag:
+        description: "The tag to place on the image."
         required: true
         type: string
       image_title:
+        description: "Value for `org.opencontainers.image.title`."
         required: false
         type: string
       is_latest:
         default: false
+        description: "Should this image also be tagged as 'latest'?"
         required: true
         type: boolean
       push:
         default: false
+        description: "Should we push the image to the registry?"
         required: false
         type: boolean
       registry:
         default: ghcr.io
+        description: "Which registry should we use?"
         required: false
         type: string
 
