@@ -3,7 +3,9 @@ name: OCI Build/Publish
 on:
   workflow_call:
     inputs:
-      artifact:
+      artifact-name:
+        default: build-output
+        description: "The name of a previously generated build artifact that should be used for building the image."
         required: false
         type: string
       attest:
@@ -13,8 +15,15 @@ on:
       build_args:
         required: false
         type: string
+      containerfile:
+        default: "Dockerfile"
+        description: "The name of the container image manifest. Relative to the `context`."
+        required: false
+        type: string
       context:
-        required: true
+        default: "."
+        description: "The container image build context working-directory."
+        required: false
         type: string
       image_description:
         required: false
@@ -56,10 +65,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
 
-      - if: ${{ inputs.artifact }}
+      - if: ${{ inputs.artifact-name }}
         uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4
         with:
-          name: ${{ inputs.artifact }}
+          name: ${{ inputs.artifact-name }}
 
       - name: Extract metadata
         id: meta
@@ -96,6 +105,7 @@ jobs:
           cache-from: type=registry,ref=${{ inputs.registry }}/${{ github.repository }}/cache
           cache-to: type=registry,ref=${{ inputs.registry }}/${{ github.repository }}/cache,mode=max
           context: ${{ inputs.context }}
+          file: ${{ inputs.context }}/${{ inputs.containerfile }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64
           # Pushes a provenance attestation to the registry, which can currently confuse
