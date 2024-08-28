@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       artifact-name:
-        default: build-output
+        default: ""
         description: "The name of a previously generated build artifact that should be used for building the image."
         required: false
         type: string
