@@ -53,17 +53,17 @@ on:
         required: false
         type: string
       with-sarif:
-        default: true
+        default: false
         description: Should we generate a vulnerability report?
         required: false
         type: boolean
       with-sbom:
-        default: true
+        default: false
         description: Should we generate an SBOM for the OCI?
         required: false
         type: boolean
       with-sbom-attest:
-        default: true
+        default: false
         description: Should we have the SBOM for the image attested?
         required: false
         type: boolean
