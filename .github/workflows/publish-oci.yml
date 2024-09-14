@@ -5,58 +5,68 @@ on:
     inputs:
       artifact-name:
         default: ""
-        description: "The name of a previously generated build artifact that should be used for building the image."
+        description: The name of a previously generated build artifact that should be used for building the image.
         required: false
         type: string
-      attest:
-        default: true
-        description: "Should we have the SBOM for the image attested?"
-        required: false
-        type: boolean
       build_args:
         required: false
         type: string
       containerfile:
-        default: "Dockerfile"
-        description: "The name of the container image manifest. Relative to the `context`."
+        default: Dockerfile
+        description: The name of the container image manifest. Relative to the `context`.
         required: false
         type: string
       context:
         default: "."
-        description: "The container image build context working-directory."
+        description: The container image build context working-directory.
         required: false
         type: string
       image_description:
-        description: "Value for `org.opencontainers.image.description`."
+        description: Value for `org.opencontainers.image.description`.
         required: false
         type: string
       image_name:
-        description: "The name of the image, including scope."
+        description: The name of the image, including scope.
         required: true
         type: string
       image_tag:
-        description: "The tag to place on the image."
+        description: The tag to place on the image.
         required: true
         type: string
       image_title:
-        description: "Value for `org.opencontainers.image.title`."
+        description: Value for `org.opencontainers.image.title`.
         required: false
         type: string
       is_latest:
         default: false
-        description: "Should this image also be tagged as 'latest'?"
+        description: Should this image also be tagged as 'latest'?
         required: true
         type: boolean
       push:
         default: false
-        description: "Should we push the image to the registry?"
+        description: Should we push the image to the registry?
         required: false
         type: boolean
       registry:
         default: ghcr.io
-        description: "Which registry should we use?"
+        description: Which registry should we use?
         required: false
         type: string
+      with-sarif:
+        default: true
+        description: Should we generate a vulnerability report?
+        required: false
+        type: boolean
+      with-sbom:
+        default: true
+        description: Should we generate an SBOM for the OCI?
+        required: false
+        type: boolean
+      with-sbom-attest:
+        default: true
+        description: Should we have the SBOM for the image attested?
+        required: false
+        type: boolean
 
 jobs:
   build-publish:
@@ -124,7 +134,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
 
       - name: Generate SBOM
-        if: ${{ inputs.push }}
+        if: ${{ inputs.with-sbom && inputs.push }}
         uses: anchore/sbom-action@61119d458adab75f756bc0b9e4bde25725f86a7a # v0
         with:
           artifact-name: ${{ inputs.image_title }}-${{ inputs.image_tag }}.sbom.spdx.json
@@ -134,7 +144,7 @@ jobs:
           upload-release-assets: false
 
       - name: Grype scan
-        if: ${{ inputs.push }}
+        if: ${{ inputs.with-sarif }}
         uses: anchore/scan-action@64a33b277ea7a1215a3c142735a1091341939ff5 # v4
         id: scan
         with:
@@ -144,14 +154,14 @@ jobs:
           severity-cutoff: critical
 
       - name: Store SARIF report
-        if: ${{ inputs.push }}
+        if: ${{ inputs.with-sarif }}
         uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4
         with:
           name: ${{ inputs.image_title }}-${{ inputs.image_tag }}.sarif.json
           path: ${{ steps.scan.outputs.sarif }}
 
       - name: Upload scan report
-        if: ${{ inputs.push }}
+        if: ${{ inputs.with-sarif }}
         uses: github/codeql-action/upload-sarif@8214744c546c1e5c8f03dde8fab3a7353211988d # v3
         with:
           category: ${{ inputs.image_name }}-${{ inputs.image_tag }}
@@ -159,7 +169,7 @@ jobs:
 
       - name: Upload SBOM attestation
         uses: actions/attest-sbom@5026d3663739160db546203eeaffa6aa1c51a4d6 # v1
-        if: ${{ inputs.attest && inputs.push }}
+        if: ${{ inputs.with-sbom && inputs.with-sbom-attest && inputs.push }}
         id: attest
         with:
           subject-name: ${{ inputs.registry }}/${{ inputs.image_name }}
