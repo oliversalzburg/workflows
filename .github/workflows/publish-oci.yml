@@ -8,7 +8,7 @@ on:
         description: The name of a previously generated build artifact that should be used for building the image.
         required: false
         type: string
-      build_args:
+      build-args:
         required: false
         type: string
       containerfile:
@@ -21,23 +21,23 @@ on:
         description: The container image build context working-directory.
         required: false
         type: string
-      image_description:
+      image-description:
         description: Value for `org.opencontainers.image.description`.
         required: false
         type: string
-      image_name:
+      image-name:
         description: The name of the image, including scope.
         required: true
         type: string
-      image_tag:
+      image-tag:
         description: The tag to place on the image.
         required: true
         type: string
-      image_title:
+      image-title:
         description: Value for `org.opencontainers.image.title`.
         required: false
         type: string
-      is_latest:
+      is-latest:
         default: false
         description: Should this image also be tagged as 'latest'?
         required: true
@@ -92,16 +92,16 @@ jobs:
         id: meta
         uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81 # v5.5.1
         with:
-          images: ${{ inputs.registry }}/${{ inputs.image_name }}
+          images: ${{ inputs.registry }}/${{ inputs.image-name }}
           labels: |
-            org.opencontainers.image.description=${{ inputs.image_description || inputs.image_title || inputs.image_name }}
+            org.opencontainers.image.description=${{ inputs.image-description || inputs.image-title || inputs.image-name }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.source=${{ github.server_url }}/${{ inputs.context }}
-            org.opencontainers.image.title=${{ inputs.image_title || inputs.image_name }}
-            org.opencontainers.image.version=${{ inputs.image_tag }}
+            org.opencontainers.image.title=${{ inputs.image-title || inputs.image-name }}
+            org.opencontainers.image.version=${{ inputs.image-tag }}
           tags: |
-            type=raw,value=${{ inputs.image_tag }}
-            type=raw,value=latest,enable=${{ inputs.is_latest }}
+            type=raw,value=${{ inputs.image-tag }}
+            type=raw,value=latest,enable=${{ inputs.is-latest }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@988b5a0280414f521da01fcc63a27aeeb4b104db # v3
@@ -137,9 +137,9 @@ jobs:
         if: ${{ inputs.with-sbom && inputs.push }}
         uses: anchore/sbom-action@61119d458adab75f756bc0b9e4bde25725f86a7a # v0
         with:
-          artifact-name: ${{ inputs.image_title }}-${{ inputs.image_tag }}.sbom.spdx.json
+          artifact-name: ${{ inputs.image-title }}-${{ inputs.image-tag }}.sbom.spdx.json
           format: spdx-json
-          image: ${{ inputs.registry }}/${{ inputs.image_name }}:${{ inputs.image_tag }}
+          image: ${{ inputs.registry }}/${{ inputs.image-name }}:${{ inputs.image-tag }}
           upload-artifact: true
           upload-release-assets: false
 
@@ -150,21 +150,21 @@ jobs:
         with:
           add-cpes-if-none: true
           fail-build: false
-          image: ${{ inputs.registry }}/${{ inputs.image_name }}:${{ inputs.image_tag }}
+          image: ${{ inputs.registry }}/${{ inputs.image-name }}:${{ inputs.image-tag }}
           severity-cutoff: critical
 
       - name: Store SARIF report
         if: ${{ inputs.with-sarif }}
         uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4
         with:
-          name: ${{ inputs.image_title }}-${{ inputs.image_tag }}.sarif.json
+          name: ${{ inputs.image-title }}-${{ inputs.image-tag }}.sarif.json
           path: ${{ steps.scan.outputs.sarif }}
 
       - name: Upload scan report
         if: ${{ inputs.with-sarif }}
         uses: github/codeql-action/upload-sarif@8214744c546c1e5c8f03dde8fab3a7353211988d # v3
         with:
-          category: ${{ inputs.image_name }}-${{ inputs.image_tag }}
+          category: ${{ inputs.image-name }}-${{ inputs.image-tag }}
           sarif_file: ${{ steps.scan.outputs.sarif }}
 
       - name: Upload SBOM attestation
@@ -172,7 +172,7 @@ jobs:
         if: ${{ inputs.with-sbom && inputs.with-sbom-attest && inputs.push }}
         id: attest
         with:
-          subject-name: ${{ inputs.registry }}/${{ inputs.image_name }}
+          subject-name: ${{ inputs.registry }}/${{ inputs.image-name }}
           subject-digest: ${{ steps.build.outputs.digest }}
-          sbom-path: ${{ inputs.image_title }}-${{ inputs.image_tag }}.sbom.spdx.json
+          sbom-path: ${{ inputs.image-title }}-${{ inputs.image-tag }}.sbom.spdx.json
           push-to-registry: true
