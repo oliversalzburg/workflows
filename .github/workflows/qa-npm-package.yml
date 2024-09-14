@@ -104,7 +104,7 @@ jobs:
       - qa
       - qa-mkdocs
     name: QA Passed
-    if: always()
+    if: always() && inputs.has-mkdocs
     runs-on: ubuntu-22.04
     steps:
       - name: Failure

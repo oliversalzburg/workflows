@@ -98,17 +98,3 @@ jobs:
           name: ${{ inputs.artifact-name }}
           path: ${{ inputs.artifact-contents }}
           retention-days: 1
-
-  qa-passed:
-    needs:
-      - qa
-    name: QA Passed
-    if: always()
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Failure
-        if: ${{ contains(needs.*.result, 'failure') }}
-        run: exit 1
-      - name: Success
-        if: ${{ success() && !(contains(needs.*.result, 'failure')) }}
-        run: exit 0
