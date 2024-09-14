@@ -15,7 +15,7 @@ concurrency:
 
 env:
   # renovate: datasource=python-version depName=python versioning=python
-  PYTHON_VERSION: "3.12.5"
+  PYTHON_VERSION: "3.12.6"
 
 jobs:
   publish:
