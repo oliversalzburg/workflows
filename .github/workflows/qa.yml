@@ -40,7 +40,7 @@ jobs:
       - frag-qa-mkdocs
       - qa-browser-app
       - qa-nodejs-oci
-    name: QA Passed Interal
+    name: QA Passed Internal
     # We don't need to run this on Renovate PRs. We will already test the `renovate/foo` branch.
     if: always() && ( github.event_name != 'pull_request' || github.actor != 'renovate[bot]' )
     runs-on: ubuntu-22.04
