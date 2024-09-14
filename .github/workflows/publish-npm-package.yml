@@ -3,6 +3,11 @@ name: Publish
 on:
   workflow_call:
     inputs:
+      draft-only:
+        default: false
+        description: Should the GitHub Release only be created as a draft?
+        required: false
+        type: boolean
       has-mkdocs:
         default: false
         description: Does this project use mkdocs?
@@ -127,7 +132,7 @@ jobs:
           automatic_release_tag: ${{ inputs.is-canary && 'next' || null }}
           body_prefix: |
             Published at <${{ env.PUBLISH_URL }}>.
-          draft: ${{ !inputs.is-canary }}
+          draft: ${{ inputs.draft-only }}
           files: sbom.spdx.json
           prerelease: ${{ inputs.is-canary }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}

@@ -3,6 +3,11 @@ name: Publish
 on:
   workflow_call:
     inputs:
+      draft-only:
+        default: false
+        description: Should the GitHub Release only be created as a draft?
+        required: false
+        type: boolean
       is-canary:
         default: true
         description: Is this a preview release?
@@ -82,7 +87,7 @@ jobs:
         uses: oliversalzburg/action-automatic-semantic-releases@bc429dc1af8c036b5f8c11fef7bcb0becfd5064d # v0.0.13
         with:
           automatic_release_tag: ${{ inputs.is-canary && 'next' || null }}
-          draft: ${{ !inputs.is-canary }}
+          draft: ${{ inputs.draft-only }}
           prerelease: ${{ inputs.is-canary }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           title: ${{ inputs.is-canary && 'Snapshot Build ' || '' }}v${{ env.RELEASE_VERSION }}
