@@ -11,7 +11,7 @@ on:
 
 concurrency:
   group: docs-deploy
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 env:
   # renovate: datasource=python-version depName=python versioning=python

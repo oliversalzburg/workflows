@@ -4,22 +4,30 @@ on:
   push:
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   frag-publish-mkdocs:
+    if: always() && ( github.event_name != 'pull_request' || github.actor != 'renovate[bot]' )
     permissions:
       contents: write
     uses: ./.github/workflows/frag-publish-mkdocs.yml
     with:
       working-directory: test
   frag-qa-mkdocs:
+    if: always() && ( github.event_name != 'pull_request' || github.actor != 'renovate[bot]' )
     uses: ./.github/workflows/frag-qa-mkdocs.yml
     with:
       working-directory: test
   qa-browser-app:
+    if: always() && ( github.event_name != 'pull_request' || github.actor != 'renovate[bot]' )
     uses: ./.github/workflows/qa-browser-app.yml
     with:
       working-directory: test
   qa-nodejs-oci:
+    if: always() && ( github.event_name != 'pull_request' || github.actor != 'renovate[bot]' )
     uses: ./.github/workflows/qa-nodejs-oci.yml
     with:
       containerfile: Containerfile
@@ -33,7 +41,8 @@ jobs:
       - qa-browser-app
       - qa-nodejs-oci
     name: QA Passed Interal
-    if: always()
+    # We don't need to run this on Renovate PRs. We will already test the `renovate/foo` branch.
+    if: always() && ( github.event_name != 'pull_request' || github.actor != 'renovate[bot]' )
     runs-on: ubuntu-22.04
     steps:
       - name: Failure
