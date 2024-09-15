@@ -121,7 +121,7 @@ jobs:
           DOCKER_BUILD_SUMMARY: false
           SOURCE_DATE_EPOCH: 0
         with:
-          build-args: ${{ inputs.build_args }}
+          build-args: ${{ inputs.build-args }}
           cache-from: type=registry,ref=${{ inputs.registry }}/${{ github.repository }}/cache
           cache-to: type=registry,ref=${{ inputs.registry }}/${{ github.repository }}/cache,mode=max
           context: ${{ inputs.context }}
