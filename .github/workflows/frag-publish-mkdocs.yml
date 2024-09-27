@@ -20,7 +20,7 @@ env:
 jobs:
   publish:
     name: Publish
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
       # mkdocs gh-deploy uses the old gh-pages branch method to publish Pages.
       contents: write

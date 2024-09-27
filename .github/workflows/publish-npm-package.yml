@@ -57,7 +57,7 @@ jobs:
       id-token: write
       packages: write
       pull-requests: read
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout
@@ -147,7 +147,7 @@ jobs:
     if: inputs.has-github-pages && !inputs.is-canary
     name: GitHub Pages
     needs: publish
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       id-token: write
