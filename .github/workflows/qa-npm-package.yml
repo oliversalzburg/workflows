@@ -36,7 +36,7 @@ jobs:
     outputs:
       NODE_LTS_VERSION: ${{ env.NODE_LTS_VERSION }}
       NODE_VERSION: ${{ env.NODE_VERSION }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Generate outputs
         run: |
@@ -105,7 +105,7 @@ jobs:
       - qa-mkdocs
     name: QA Passed
     if: always() && inputs.has-mkdocs
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Failure
         if: ${{ contains(needs.*.result, 'failure') }}
