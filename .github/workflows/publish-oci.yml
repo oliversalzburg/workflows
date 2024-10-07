@@ -164,7 +164,7 @@ jobs:
 
       - name: Upload scan report
         if: ${{ inputs.with-sarif }}
-        uses: github/codeql-action/upload-sarif@6db8d6351fd0be61f9ed8ebd12ccd35dcec51fea # v3
+        uses: github/codeql-action/upload-sarif@c36620d31ac7c881962c3d9dd939c40ec9434f2b # v3
         with:
           category: ${{ inputs.image-name }}-${{ inputs.image-tag }}
           sarif_file: ${{ steps.scan.outputs.sarif }}
