@@ -16,6 +16,8 @@ env:
 jobs:
   qa:
     name: Run QA
+    permissions:
+      contents: read
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout

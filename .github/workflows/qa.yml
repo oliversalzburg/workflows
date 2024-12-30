@@ -16,14 +16,22 @@ jobs:
     with:
       working-directory: test
   frag-qa-mkdocs:
+    permissions:
+      contents: read
     uses: ./.github/workflows/frag-qa-mkdocs.yml
     with:
       working-directory: test
   qa-browser-app:
+    permissions:
+      contents: read
+      packages: read
     uses: ./.github/workflows/qa-browser-app.yml
     with:
       working-directory: test
   qa-nodejs-oci:
+    permissions:
+      contents: read
+      packages: read
     uses: ./.github/workflows/qa-nodejs-oci.yml
     with:
       containerfile: Containerfile
@@ -31,12 +39,14 @@ jobs:
       working-directory: test
 
   qa-passed-internal:
+    name: QA Passed Internal
     needs:
       - frag-publish-mkdocs
       - frag-qa-mkdocs
       - qa-browser-app
       - qa-nodejs-oci
-    name: QA Passed Internal
+    permissions:
+      contents: read
     runs-on: ubuntu-24.04
     steps:
       - name: Failure
