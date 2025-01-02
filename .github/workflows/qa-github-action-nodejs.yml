@@ -52,3 +52,17 @@ jobs:
         run: yarn lint
       - name: Test
         run: yarn test
+
+  qa-passed:
+    needs:
+      - qa
+    name: QA Passed
+    if: always()
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Failure
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
+      - name: Success
+        if: ${{ success() && !(contains(needs.*.result, 'failure')) }}
+        run: exit 0
