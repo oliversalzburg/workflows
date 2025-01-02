@@ -58,7 +58,7 @@ jobs:
       - qa
     name: QA Passed
     if: always()
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Failure
         if: ${{ contains(needs.*.result, 'failure') }}
