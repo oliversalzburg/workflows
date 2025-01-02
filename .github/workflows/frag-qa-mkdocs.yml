@@ -1,4 +1,4 @@
-name: QA
+name: QA mkdocs
 
 on:
   workflow_call:

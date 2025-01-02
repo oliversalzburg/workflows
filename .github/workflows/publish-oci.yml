@@ -1,4 +1,4 @@
-name: OCI Build/Publish
+name: Publish OCI
 
 on:
   workflow_call:
