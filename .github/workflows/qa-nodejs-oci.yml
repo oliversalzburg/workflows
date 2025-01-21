@@ -31,7 +31,7 @@ on:
 
 env:
   # renovate: datasource=node-version depName=node versioning=node
-  NODE_VERSION: "23.6.0"
+  NODE_VERSION: "23.6.1"
 
 jobs:
   qa:
