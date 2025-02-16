@@ -33,6 +33,11 @@ on:
         description: npm package registry URL to publish to.
         required: false
         type: string
+      skip-integrity-check:
+        default: false
+        description: Should we skip checking if the main JS entrypoint matches the source code?
+        required: false
+        type: boolean
       wants-github-release:
         default: false
         description: Should we create a GitHub release?
@@ -82,6 +87,7 @@ jobs:
         run: yarn install
 
       - name: Check build integrity
+        if: success() && !inputs.skip-integrity-check
         run: |
           yarn build:export
           git diff --exit-code lib
