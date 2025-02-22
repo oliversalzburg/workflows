@@ -125,7 +125,7 @@ jobs:
 
       - name: Generate GitHub release
         if: success() && inputs.wants-github-release
-        uses: oliversalzburg/action-automatic-semantic-releases@main
+        uses: oliversalzburg/action-automatic-semantic-releases@v0.3.3
         with:
           automatic_release_tag: ${{ inputs.is-canary && 'next' || null }}
           changelog_artifact: changelog.json
