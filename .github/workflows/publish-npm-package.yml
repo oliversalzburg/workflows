@@ -129,14 +129,14 @@ jobs:
         if: success() && inputs.wants-github-release
         uses: oliversalzburg/action-automatic-semantic-releases@d41438fe4e15d87d9158815972485a0b8673adf1 # v0.4.12
         with:
-          automatic_release_tag: ${{ inputs.is-canary && 'next' || null }}
+          automatic-release-tag: ${{ inputs.is-canary && 'next' || null }}
           body_prefix: |
             Published at <${{ env.PUBLISH_URL }}>.
-          changelog_artifact: changelog.json
+          changelog-artifact: changelog.json
           draft: ${{ inputs.draft-only }}
           files: sbom.spdx.json
           prerelease: ${{ inputs.is-canary }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
           title: ${{ inputs.is-canary && 'Snapshot Build ' || '' }}v${{ env.RELEASE_VERSION }}
 
       - name: Store Changelog

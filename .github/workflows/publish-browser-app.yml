@@ -86,11 +86,11 @@ jobs:
         if: success() && inputs.wants-github-release
         uses: oliversalzburg/action-automatic-semantic-releases@d41438fe4e15d87d9158815972485a0b8673adf1 # v0.4.12
         with:
-          automatic_release_tag: ${{ inputs.is-canary && 'next' || null }}
-          changelog_artifact: changelog.json
+          automatic-release-tag: ${{ inputs.is-canary && 'next' || null }}
+          changelog-artifact: changelog.json
           draft: ${{ inputs.draft-only }}
           prerelease: ${{ inputs.is-canary }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
           title: ${{ inputs.is-canary && 'Snapshot Build ' || '' }}v${{ env.RELEASE_VERSION }}
 
       - name: Store Changelog
