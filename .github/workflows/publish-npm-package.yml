@@ -130,20 +130,13 @@ jobs:
         uses: oliversalzburg/action-automatic-semantic-releases@063308a0ead5f66b72f123156204c2085b6b8bd0 # v0.4.15
         with:
           automatic-release-tag: ${{ inputs.is-canary && 'next' || null }}
-          body_prefix: |
+          body-prefix: |
             Published at <${{ env.PUBLISH_URL }}>.
-          changelog-artifact: changelog.json
           draft: ${{ inputs.draft-only }}
           files: sbom.spdx.json
           prerelease: ${{ inputs.is-canary }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           title: ${{ inputs.is-canary && 'Snapshot Build ' || '' }}v${{ env.RELEASE_VERSION }}
-
-      - name: Store Changelog
-        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4
-        with:
-          name: changelog.json
-          path: changelog.json
 
   publish-mkdocs:
     if: inputs.has-mkdocs && !inputs.is-canary
