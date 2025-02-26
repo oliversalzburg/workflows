@@ -45,16 +45,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node${{ env.NODE_VERSION }}
 
-      - name: Install dependencies
-        run: yarn install
-        working-directory: ${{ inputs.working-directory }}
-
-      - name: Build
-        run: yarn build
-        working-directory: ${{ inputs.working-directory }}
-      - name: Lint
-        run: yarn lint
-        working-directory: ${{ inputs.working-directory }}
-      - name: Test
-        run: yarn test
+      - name: Build, lint, test
+        run: make build lint test
         working-directory: ${{ inputs.working-directory }}

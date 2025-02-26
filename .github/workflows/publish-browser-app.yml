@@ -72,16 +72,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node${{ env.NODE_VERSION }}
 
-      - name: Install dependencies
-        run: yarn install
-
       - name: Extract manifest metadata
         if: inputs.wants-github-release
         run: |
           echo "PACKAGE_NAME=$(jq --raw-output .name package.json)" | tee $GITHUB_ENV
 
       - name: Build
-        run: yarn build
+        run: make
 
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3

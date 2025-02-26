@@ -94,9 +94,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node${{ env.NODE_VERSION }}
 
-      - name: Install dependencies
-        run: yarn install
-
       - name: Set package details
         run: |
           PACKAGE_NAME=$(jq --raw-output .name package.json)
