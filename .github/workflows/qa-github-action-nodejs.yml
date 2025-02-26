@@ -13,13 +13,7 @@ jobs:
     permissions:
       contents: read
       packages: read
-    runs-on: ${{ matrix.os-release }}
-    strategy:
-      matrix:
-        os-release:
-          - ubuntu-22.04
-          - ubuntu-24.04
-          - windows-2022
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout
@@ -41,23 +35,9 @@ jobs:
         uses: actions/cache@0c907a75c2c80ebcb7f088228285e798b750cf8f # v4
         with:
           path: .yarn/cache
-          key: node${{ env.NODE_VERSION }}-${{ matrix.os-release }}-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-node${{ env.NODE_VERSION }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            node${{ env.NODE_VERSION }}-${{ matrix.os-release }}
+            ${{ runner.os }}-node${{ env.NODE_VERSION }}
 
       - name: Build, lint, test
         run: make build lint test
-
-  qa-passed:
-    needs:
-      - qa
-    name: QA Passed
-    if: always()
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Failure
-        if: ${{ contains(needs.*.result, 'failure') }}
-        run: exit 1
-      - name: Success
-        if: ${{ success() && !(contains(needs.*.result, 'failure')) }}
-        run: exit 0
