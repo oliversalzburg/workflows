@@ -41,9 +41,9 @@ jobs:
         uses: actions/cache@0c907a75c2c80ebcb7f088228285e798b750cf8f # v4
         with:
           path: .yarn/cache
-          key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-node${{ env.NODE_VERSION }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-node${{ matrix.node-version }}
+            ${{ runner.os }}-node${{ env.NODE_VERSION }}
 
       - name: Install dependencies
         run: yarn install
