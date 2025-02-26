@@ -9,13 +9,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  frag-publish-mkdocs:
-    permissions:
-      contents: write
-    uses: ./.github/workflows/frag-publish-mkdocs.yml
-    with:
-      dry-run: true
-      working-directory: test
   frag-qa-mkdocs:
     permissions:
       contents: read
