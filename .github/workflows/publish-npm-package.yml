@@ -99,8 +99,10 @@ jobs:
 
       - name: Set package details
         run: |
-          echo "PACKAGE_NAME=$(jq --raw-output .name package.json)" | tee $GITHUB_ENV
-          echo "PUBLISH_URL=https://www.npmjs.com/package/$PACKAGE_NAME/v/${{ env.RELEASE_VERSION }}" | tee $GITHUB_ENV
+          PACKAGE_NAME=$(jq --raw-output .name package.json)
+          echo "PACKAGE_NAME=$PACKAGE_NAME" | tee $GITHUB_ENV
+          PUBLISH_URL=https://www.npmjs.com/package/$PACKAGE_NAME/v/${{ env.RELEASE_VERSION }}
+          echo "PUBLISH_URL=$PUBLISH_URL" | tee $GITHUB_ENV
 
       - name: Publish package
         env:
