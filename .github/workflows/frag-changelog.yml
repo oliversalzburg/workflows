@@ -15,65 +15,77 @@ on:
     outputs:
       automatic-releases-tag:
         description: The release tag this action just processed.
-        value: ${{ steps.changelog.outputs.automatic-releases-tag }}
+        value: ${{ jobs.changelog.outputs.automatic-releases-tag }}
       commits-total:
         description: Total amount of commits since last release.
-        value: ${{ steps.changelog.outputs.commits-total }}
+        value: ${{ jobs.changelog.outputs.commits-total }}
       unconventional-total:
         description: Total amount of commits without convention.
-        value: ${{ steps.changelog.outputs.unconventional-total }}
+        value: ${{ jobs.changelog.outputs.unconventional-total }}
       lifecycle-total:
         description: Total amount of commits that fall into the "lifecycle" category.
-        value: ${{ steps.changelog.outputs.lifecycle-total }}
+        value: ${{ jobs.changelog.outputs.lifecycle-total }}
       major-total:
         description: Total amount of commits that fall into the "major change" category.
-        value: ${{ steps.changelog.outputs.major-total }}
+        value: ${{ jobs.changelog.outputs.major-total }}
       minor-total:
         description: Total amount of commits that fall into the "minor change" category.
-        value: ${{ steps.changelog.outputs.minor-total }}
+        value: ${{ jobs.changelog.outputs.minor-total }}
       upload-url:
         description: The URL for uploading additional assets to the release.
-        value: ${{ steps.changelog.outputs.upload-url }}
+        value: ${{ jobs.changelog.outputs.upload-url }}
       version-current:
         description: Current version in the manifest.
-        value: ${{ steps.changelog.outputs.version-current }}
+        value: ${{ jobs.changelog.outputs.version-current }}
       version-extensions:
         description: Extension that was found on your current manifest version.
-        value: ${{ steps.changelog.outputs.version-extensions }}
+        value: ${{ jobs.changelog.outputs.version-extensions }}
       version-dev:
         description: Version number to use for a transient development release.
-        value: ${{ steps.changelog.outputs.version-dev }}
+        value: ${{ jobs.changelog.outputs.version-dev }}
       version-dev-extended:
         description: Version number to use for a transient development release, including extension.
-        value: ${{ steps.changelog.outputs.version-dev-extended }}
+        value: ${{ jobs.changelog.outputs.version-dev-extended }}
       version-major:
         description: Version number to use for a major bump.
-        value: ${{ steps.changelog.outputs.version-major }}
+        value: ${{ jobs.changelog.outputs.version-major }}
       version-minor:
         description: Version number to use for a minor bump.
-        value: ${{ steps.changelog.outputs.version-minor }}
+        value: ${{ jobs.changelog.outputs.version-minor }}
       version-nightly:
         description: Version number to use for a transient nightly release.
-        value: ${{ steps.changelog.outputs.version-nightly }}
+        value: ${{ jobs.changelog.outputs.version-nightly }}
       version-nightly-extended:
         description: Version number to use for a transient nightly release, including extensions.
-        value: ${{ steps.changelog.outputs.version-nightly-extended }}
+        value: ${{ jobs.changelog.outputs.version-nightly-extended }}
       version-patch:
         description: Version number to use for a patch bump.
-        value: ${{ steps.changelog.outputs.version-patch }}
+        value: ${{ jobs.changelog.outputs.version-patch }}
       version-root:
         description: Current manifest version stripped of extensions.
-        value: ${{ steps.changelog.outputs.version-root }}
+        value: ${{ jobs.changelog.outputs.version-root }}
 
 jobs:
   changelog:
     name: Changelog
     outputs:
-      major: ${{ steps.changelog.outputs.major-total }}
-      minor: ${{ steps.changelog.outputs.minor-total }}
-      patch: ${{ steps.changelog.outputs.patch-total }}
-      lifecycle: ${{ steps.changelog.outputs.lifecycle-total }}
-      version: ${{ steps.changelog.outputs.version-dev-extended }}
+      automatic-releases-tag: ${{ steps.changelog.outputs.automatic-releases-tag }}
+      commits-total: ${{ steps.changelog.outputs.commits-total }}
+      unconventional-total: ${{ steps.changelog.outputs.unconventional-total }}
+      lifecycle-total: ${{ steps.changelog.outputs.lifecycle-total }}
+      major-total: ${{ steps.changelog.outputs.major-total }}
+      minor-total: ${{ steps.changelog.outputs.minor-total }}
+      upload-url: ${{ steps.changelog.outputs.upload-url }}
+      version-current: ${{ steps.changelog.outputs.version-current }}
+      version-extensions: ${{ steps.changelog.outputs.version-extensions }}
+      version-dev: ${{ steps.changelog.outputs.version-dev }}
+      version-dev-extended: ${{ steps.changelog.outputs.version-dev-extended }}
+      version-major: ${{ steps.changelog.outputs.version-major }}
+      version-minor: ${{ steps.changelog.outputs.version-minor }}
+      version-nightly: ${{ steps.changelog.outputs.version-nightly }}
+      version-nightly-extended: ${{ steps.changelog.outputs.version-nightly-extended }}
+      version-patch: ${{ steps.changelog.outputs.version-patch }}
+      version-root: ${{ steps.changelog.outputs.version-root }}
     permissions:
       contents: read
     runs-on: ubuntu-24.04
