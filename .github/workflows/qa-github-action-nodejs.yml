@@ -4,8 +4,8 @@ on:
   workflow_call:
 
 env:
-  # Don't auto-upgrade. Align with GitHub Actions runtime availability.
-  NODE_VERSION: "20.18.0"
+  # renovate: datasource=node-version depName=node versioning=node
+  NODE_VERSION: "23.8.0"
 
 jobs:
   qa:
