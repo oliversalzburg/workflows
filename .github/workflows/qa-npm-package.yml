@@ -45,7 +45,8 @@ jobs:
 
   qa:
     name: Run QA
-    needs: versions
+    needs: 
+      - versions
     permissions:
       contents: read
       packages: read

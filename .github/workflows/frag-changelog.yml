@@ -1,0 +1,70 @@
+name: Changelog
+
+on:
+  workflow_call:
+    inputs:
+      automatic-release-tag:
+        description: The automatic release tag we're mainting.
+        required: false
+        type: string
+      working-directory:
+        default: "."
+        description: Where is the `mkdocs.yml` file located?
+        required: false
+        type: string
+
+jobs:
+  changelog:
+    name: Changelog
+    outputs:
+      major: ${{ steps.changelog.outputs.major-total }}
+      minor: ${{ steps.changelog.outputs.minor-total }}
+      patch: ${{ steps.changelog.outputs.patch-total }}
+      lifecycle: ${{ steps.changelog.outputs.lifecycle-total }}
+      version: ${{ steps.changelog.outputs.version-dev-extended }}
+    permissions:
+      contents: read
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            package.json
+          sparse-checkout-cone-mode: false
+
+      - name: Extract current version
+        run: |
+          echo "ROOT_VERSION=$(jq --raw-output .version package.json)" | tee $GITHUB_ENV
+
+      - name: Generate Changelog
+        id: changelog
+        uses: oliversalzburg/action-automatic-semantic-releases@063308a0ead5f66b72f123156204c2085b6b8bd0 # v0.4.15
+        with:
+          automatic-release-tag: ${{ inputs.automatic-release-tag }}
+          changelog-artifact: changelog.json
+          dry-run: true
+          publish: false
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          root-version: ${{ env.ROOT_VERSION }}
+
+      - name: Store Changelog
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4
+        with:
+          name: changelog.json
+          path: changelog.json
+
+      - name: Show change counts
+        env:
+          MAJOR: ${{ steps.changelog.outputs.major-total }}
+          MINOR: ${{ steps.changelog.outputs.minor-total }}
+          PATCH: ${{ steps.changelog.outputs.patch-total }}
+          LIFECYCLE: ${{ steps.changelog.outputs.lifecycle-total }}
+          VERSION: ${{ steps.changelog.outputs.version-dev-extended }}
+        run: |
+          echo Major changes: $MAJOR
+          echo Minor changes: $MINOR
+          echo Patch changes: $PATCH
+          echo Lifecycle changes: $LIFECYCLE
+          echo Pre-Release should use version: $VERSION

@@ -31,7 +31,15 @@ env:
   NODE_VERSION: "23.8.0"
 
 jobs:
+  changelog:
+    name: 🔹Changelog
+    uses: ./.github/workflows/frag-changelog.yml
+    with:
+      automatic-release-tag: ${{ inputs.is-canary && 'next' || null }}
+
   publish:
+    env:
+      RELEASE_VERSION: ${{ inputs.is-canary && needs.changelog.outputs.version-dev-extended || needs.changelog.outputs.version-current }}
     name: Publish
     permissions:
       contents: read
@@ -65,22 +73,16 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Set release version
+      - name: Extract manifest metadata
+        if: inputs.wants-github-release
         run: |
-          RELEASE_VERSION=$(yarn nextversion)
-          echo "RELEASE_VERSION=$RELEASE_VERSION" | tee $GITHUB_ENV
+          echo "PACKAGE_NAME=$(jq --raw-output .name package.json)" | tee $GITHUB_ENV
 
       - name: Build
         run: yarn build
 
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
-
-      - name: Prepare GitHub release
-        if: inputs.wants-github-release
-        run: |
-          PACKAGE_NAME=$(jq --raw-output .name < package.json)
-          echo "PACKAGE_NAME=$PACKAGE_NAME" | tee $GITHUB_ENV
 
       - name: Generate GitHub release
         if: success() && inputs.wants-github-release

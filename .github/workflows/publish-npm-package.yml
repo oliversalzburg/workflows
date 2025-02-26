@@ -50,8 +50,18 @@ env:
   NODE_VERSION: "23.8.0"
 
 jobs:
+  changelog:
+    name: 🔹Changelog
+    uses: ./.github/workflows/frag-changelog.yml
+    with:
+      automatic-release-tag: ${{ inputs.is-canary && 'next' || null }}
+
   publish:
+    env:
+      RELEASE_VERSION: ${{ inputs.is-canary && needs.changelog.outputs.version-dev-extended || needs.changelog.outputs.version-current }}
     name: Publish
+    needs:
+      - changelog
     permissions:
       contents: write
       id-token: write
@@ -85,22 +95,9 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Set canary release version
-        if: success() && inputs.is-canary
-        run: |
-          RELEASE_VERSION=$(yarn nextversion --canary=patch)
-          echo "RELEASE_VERSION=$RELEASE_VERSION" | tee $GITHUB_ENV
-
-      - name: Set release version
-        if: success() && !inputs.is-canary
-        run: |
-          RELEASE_VERSION=$(yarn nextversion)
-          echo "RELEASE_VERSION=$RELEASE_VERSION" | tee $GITHUB_ENV
-
       - name: Set package details
         run: |
-          PACKAGE_NAME=$(jq --raw-output .name < package.json)
-          echo "PACKAGE_NAME=$PACKAGE_NAME" | tee $GITHUB_ENV
+          echo "PACKAGE_NAME=$(jq --raw-output .name package.json)" | tee $GITHUB_ENV
           echo "PUBLISH_URL=https://www.npmjs.com/package/$PACKAGE_NAME/v/${{ env.RELEASE_VERSION }}" | tee $GITHUB_ENV
 
       - name: Publish package
@@ -146,7 +143,8 @@ jobs:
   publish-site:
     if: inputs.has-github-pages && !inputs.is-canary
     name: GitHub Pages
-    needs: publish
+    needs:
+      - publish
     runs-on: ubuntu-24.04
     permissions:
       contents: read
