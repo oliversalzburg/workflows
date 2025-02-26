@@ -12,6 +12,58 @@ on:
         description: Where is the `mkdocs.yml` file located?
         required: false
         type: string
+    outputs:
+      automatic-releases-tag:
+        description: The release tag this action just processed.
+        value: ${{ steps.changelog.outputs.automatic-releases-tag }}
+      commits-total:
+        description: Total amount of commits since last release.
+        value: ${{ steps.changelog.outputs.commits-total }}
+      unconventional-total:
+        description: Total amount of commits without convention.
+        value: ${{ steps.changelog.outputs.unconventional-total }}
+      lifecycle-total:
+        description: Total amount of commits that fall into the "lifecycle" category.
+        value: ${{ steps.changelog.outputs.lifecycle-total }}
+      major-total:
+        description: Total amount of commits that fall into the "major change" category.
+        value: ${{ steps.changelog.outputs.major-total }}
+      minor-total:
+        description: Total amount of commits that fall into the "minor change" category.
+        value: ${{ steps.changelog.outputs.minor-total }}
+      upload-url:
+        description: The URL for uploading additional assets to the release.
+        value: ${{ steps.changelog.outputs.upload-url }}
+      version-current:
+        description: Current version in the manifest.
+        value: ${{ steps.changelog.outputs.version-current }}
+      version-extensions:
+        description: Extension that was found on your current manifest version.
+        value: ${{ steps.changelog.outputs.version-extensions }}
+      version-dev:
+        description: Version number to use for a transient development release.
+        value: ${{ steps.changelog.outputs.version-dev }}
+      version-dev-extended:
+        description: Version number to use for a transient development release, including extension.
+        value: ${{ steps.changelog.outputs.version-dev-extended }}
+      version-major:
+        description: Version number to use for a major bump.
+        value: ${{ steps.changelog.outputs.version-major }}
+      version-minor:
+        description: Version number to use for a minor bump.
+        value: ${{ steps.changelog.outputs.version-minor }}
+      version-nightly:
+        description: Version number to use for a transient nightly release.
+        value: ${{ steps.changelog.outputs.version-nightly }}
+      version-nightly-extended:
+        description: Version number to use for a transient nightly release, including extensions.
+        value: ${{ steps.changelog.outputs.version-nightly-extended }}
+      version-patch:
+        description: Version number to use for a patch bump.
+        value: ${{ steps.changelog.outputs.version-patch }}
+      version-root:
+        description: Current manifest version stripped of extensions.
+        value: ${{ steps.changelog.outputs.version-root }}
 
 jobs:
   changelog:
