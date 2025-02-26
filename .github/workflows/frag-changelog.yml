@@ -31,6 +31,9 @@ on:
       minor-total:
         description: Total amount of commits that fall into the "minor change" category.
         value: ${{ jobs.changelog.outputs.minor-total }}
+      patch-total:
+        description: Total amount of commits that fall into the "patch change" category.
+        value: ${{ jobs.changelog.outputs.patch-total }}
       upload-url:
         description: The URL for uploading additional assets to the release.
         value: ${{ jobs.changelog.outputs.upload-url }}
@@ -75,6 +78,7 @@ jobs:
       lifecycle-total: ${{ steps.changelog.outputs.lifecycle-total }}
       major-total: ${{ steps.changelog.outputs.major-total }}
       minor-total: ${{ steps.changelog.outputs.minor-total }}
+      patch-total: ${{ steps.changelog.outputs.patch-total }}
       upload-url: ${{ steps.changelog.outputs.upload-url }}
       version-current: ${{ steps.changelog.outputs.version-current }}
       version-extensions: ${{ steps.changelog.outputs.version-extensions }}
