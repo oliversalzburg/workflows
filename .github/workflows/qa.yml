@@ -35,7 +35,6 @@ jobs:
   qa-passed-internal:
     name: QA Passed Internal
     needs:
-      - frag-publish-mkdocs
       - frag-qa-mkdocs
       - qa-browser-app
       - qa-nodejs-oci
