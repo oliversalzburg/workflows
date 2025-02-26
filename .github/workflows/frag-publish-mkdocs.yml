@@ -3,6 +3,11 @@ name: Publish mkdocs
 on:
   workflow_call:
     inputs:
+      dry-run:
+        default: false
+        description: Should publishing be skipped? Useful during tests.
+        required: false
+        type: boolean
       working-directory:
         default: "."
         description: Where is the `mkdocs.yml` file located?
@@ -35,7 +40,15 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
+      - name: Build documentation
+        if: ${{ inputs.dry-run }}
+        run: |
+          cd "${{ inputs.working-directory }}"
+          pip install mkdocs-material
+          mkdocs build
+
       - name: Build/deploy documentation
+        if: ${{ !inputs.dry-run }}
         run: |
           cd "${{ inputs.working-directory }}"
           pip install mkdocs-material
