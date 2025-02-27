@@ -87,7 +87,9 @@ jobs:
             ${{ runner.os }}-node${{ matrix.node-version }}
 
       - name: Build, lint, test
-        run: make build lint test
+        run: |
+          make lint
+          make build test
 
   qa-mkdocs:
     if: inputs.has-mkdocs

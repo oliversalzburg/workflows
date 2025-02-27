@@ -46,5 +46,7 @@ jobs:
             ${{ runner.os }}-node${{ env.NODE_VERSION }}
 
       - name: Build, lint, test
-        run: make build lint test
+        run: |
+          make lint
+          make build test
         working-directory: ${{ inputs.working-directory }}
