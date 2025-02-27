@@ -14,7 +14,7 @@ on:
         required: false
         type: boolean
       publish-script:
-        default: ""
+        default: make
         description: Shell code to run to prepare the package for publishing.
         required: false
         type: string
