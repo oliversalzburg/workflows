@@ -1,0 +1,99 @@
+name: Publish mkdocs
+
+on:
+  workflow_call:
+    inputs:
+      is-canary:
+        default: true
+        description: Is this a preview release?
+        required: false
+        type: boolean
+      publish-script:
+        default: make
+        description: Shell code to run to prepare the package for publishing.
+        required: false
+        type: string
+      registry-url:
+        default: https://registry.npmjs.org
+        description: npm package registry URL to publish to.
+        required: false
+        type: string
+      version:
+        description: The version to publish.
+        required: true
+        type: string
+      working-directory:
+        default: "."
+        description: Where is the `mkdocs.yml` file located?
+        required: false
+        type: string
+    outputs:
+      publish-url:
+        value: ${{ jobs.publish.outputs.publish-url }}
+    secrets:
+      NPM_TOKEN:
+        description: A personal access token to publish the package with.
+        required: true
+
+concurrency:
+  group: docs-deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  # renovate: datasource=python-version depName=python versioning=python
+  PYTHON_VERSION: "3.13.2"
+
+jobs:
+  publish:
+    name: Publish
+    outputs:
+      publish-url: ${{ steps.details.outputs.publish-url }}
+    permissions:
+      contents: write
+      id-token: write
+      packages: write
+      pull-requests: read
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          persist-credentials: false
+
+      - name: Select Node.js version
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: ${{ inputs.registry-url }}
+
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          yarn config set enableGlobalCache false
+
+      - name: Load cached dependencies
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4
+        with:
+          path: .yarn/cache
+          key: ${{ runner.os }}-node${{ env.NODE_VERSION }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node${{ env.NODE_VERSION }}
+
+      - id: details
+        name: Set package details
+        run: |
+          PACKAGE_NAME=$(jq --raw-output .name package.json)
+          echo "PACKAGE_NAME=$PACKAGE_NAME" | tee $GITHUB_ENV
+          PUBLISH_URL=https://www.npmjs.com/package/$PACKAGE_NAME/v/${{ inputs.version }}
+          echo "PUBLISH_URL=$PUBLISH_URL" | tee $GITHUB_ENV
+          echo "publish-url=$PUBLISH_URL" >> $GITHUB_OUTPUT
+
+      - name: Publish package
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          ${{ inputs.publish-script }}
+          npm --allow-same-version --ignore-scripts --no-git-tag-version version ${{ inputs.version }}
+          npm publish --access=public --provenance --tag=${{ inputs.is-canary && 'next' || 'latest' }}
+          echo "Published npm package to <${{ env.PUBLISH_URL }}>" >> $GITHUB_STEP_SUMMARY

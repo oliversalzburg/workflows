@@ -57,84 +57,18 @@ jobs:
       automatic-release-tag: ${{ inputs.is-canary && 'next' || null }}
 
   publish:
-    env:
-      RELEASE_VERSION: ${{ inputs.is-canary && needs.changelog.outputs.version-dev-extended || needs.changelog.outputs.version-current }}
-    name: Publish
+    name: Publish npm
     needs:
       - changelog
-    permissions:
-      contents: write
-      id-token: write
-      packages: write
-      pull-requests: read
-    runs-on: ubuntu-24.04
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-        with:
-          persist-credentials: false
-
-      - name: Select Node.js version
-        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          registry-url: ${{ inputs.registry-url }}
-
-      - name: Enable Corepack
-        run: |
-          corepack enable
-          yarn config set enableGlobalCache false
-
-      - name: Load cached dependencies
-        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4
-        with:
-          path: .yarn/cache
-          key: ${{ runner.os }}-node${{ env.NODE_VERSION }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node${{ env.NODE_VERSION }}
-
-      - name: Set package details
-        run: |
-          PACKAGE_NAME=$(jq --raw-output .name package.json)
-          echo "PACKAGE_NAME=$PACKAGE_NAME" | tee $GITHUB_ENV
-          PUBLISH_URL=https://www.npmjs.com/package/$PACKAGE_NAME/v/${{ env.RELEASE_VERSION }}
-          echo "PUBLISH_URL=$PUBLISH_URL" | tee $GITHUB_ENV
-
-      - name: Publish package
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          ${{ inputs.publish-script }}
-          npm --allow-same-version --ignore-scripts --no-git-tag-version version ${{ env.RELEASE_VERSION }}
-          npm publish --access=public --provenance --tag=${{ inputs.is-canary && 'next' || 'latest' }}
-          echo "Published npm package to <${{ env.PUBLISH_URL }}>" >> $GITHUB_STEP_SUMMARY
-
-      - name: Upload GitHub Pages artifact
-        if: inputs.has-github-pages
-        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
-
-      - name: Generate SBOM
-        if: success() && inputs.wants-github-release
-        uses: anchore/sbom-action@f325610c9f50a54015d37c8d16cb3b0e2c8f4de0 # v0
-        with:
-          format: spdx-json
-          output-file: sbom.spdx.json
-          upload-artifact: false
-          upload-release-assets: false
-
-      - name: Generate GitHub release
-        if: success() && inputs.wants-github-release
-        uses: oliversalzburg/action-automatic-semantic-releases@main
-        with:
-          automatic-release-tag: ${{ inputs.is-canary && 'next' || null }}
-          body-prefix: |
-            Published at <${{ env.PUBLISH_URL }}>.
-          draft: ${{ inputs.draft-only }}
-          files: sbom.spdx.json
-          prerelease: ${{ inputs.is-canary }}
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          title: ${{ inputs.is-canary && 'Snapshot Build ' || '' }}v${{ env.RELEASE_VERSION }}
+    uses: ./.github/workflows/frag-publish-npm.yml
+    with:
+      is-canary: ${{ inputs.is-canary }}
+      publish-script: ${{ inputs.publish-script }}
+      registry-url: ${{ inputs.registry-url }}
+      version: ${{ inputs.is-canary && needs.changelog.outputs.version-dev-extended || needs.changelog.outputs.version-current }}
+      working-directory: ${{ inputs.working-directory }}
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-mkdocs:
     if: inputs.has-mkdocs && !inputs.is-canary
