@@ -96,7 +96,7 @@ jobs:
             ${{ runner.os }}-node${{ env.NODE_VERSION }}
 
       - name: Build
-        run: make
+        run: ${{ inputs.publish-script }}
 
       - name: Check build integrity
         if: success() && !inputs.skip-integrity-check
