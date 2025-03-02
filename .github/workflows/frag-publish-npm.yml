@@ -8,6 +8,10 @@ on:
         description: Is this a preview release?
         required: false
         type: boolean
+      npm-dist-tag:
+        description: The dist-tag to apply to the published npm package. If none is given, "latest" or "next" are used depending on your `is-canary` setting.
+        required: false
+        type: string
       publish-script:
         default: make
         description: Shell code to run to prepare the package for publishing.
@@ -40,6 +44,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
+  NPM_DIST_TAG: ${{ inputs.npm-dist-tag || ( inputs.is-canary && 'next' || 'latest' ) }}
   # renovate: datasource=python-version depName=python versioning=python
   PYTHON_VERSION: "3.13.2"
 
