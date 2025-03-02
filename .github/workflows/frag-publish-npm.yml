@@ -5,6 +5,7 @@ on:
     inputs:
       is-canary:
         default: true
+        deprecationMessage: Use `npm-dist-tag` instead.
         description: Is this a preview release?
         required: false
         type: boolean
@@ -50,6 +51,7 @@ env:
 
 jobs:
   publish:
+    if: inputs.version != ''
     name: Publish
     outputs:
       publish-url: ${{ steps.details.outputs.publish-url }}
@@ -100,5 +102,5 @@ jobs:
         run: |
           ${{ inputs.publish-script }}
           npm --allow-same-version --ignore-scripts --no-git-tag-version version ${{ inputs.version }}
-          npm publish --access=public --provenance --tag=${{ inputs.is-canary && 'next' || 'latest' }}
+          npm publish --access=public --provenance --tag=${{ inputs.npm-dist-tag }}
           echo "Published npm package to <${{ env.PUBLISH_URL }}>" >> $GITHUB_STEP_SUMMARY
