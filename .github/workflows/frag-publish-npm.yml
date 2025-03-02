@@ -5,8 +5,7 @@ on:
     inputs:
       is-canary:
         default: true
-        deprecationMessage: Use `npm-dist-tag` instead.
-        description: Is this a preview release?
+        description: "DEPRECATED: Use `npm-dist-tag` instead."
         required: false
         type: boolean
       npm-dist-tag:
