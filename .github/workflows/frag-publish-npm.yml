@@ -35,7 +35,7 @@ on:
         required: true
 
 concurrency:
-  group: docs-deploy-${{ github.ref }}
+  group: publish-npm
   cancel-in-progress: false
 
 env:
@@ -98,3 +98,6 @@ jobs:
           npm --allow-same-version --ignore-scripts --no-git-tag-version version ${{ inputs.version }}
           npm publish --access=public --provenance --tag=${{ inputs.npm-dist-tag }}
           echo "Published npm package to <${{ env.PUBLISH_URL }}>" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
