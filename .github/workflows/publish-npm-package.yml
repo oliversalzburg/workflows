@@ -20,7 +20,22 @@ on:
         type: boolean
       is-canary:
         default: true
-        description: Is this a preview release?
+        description: Is this a development build?
+        required: false
+        type: boolean
+      is-nightly:
+        default: false
+        description: Is this a scheduled build?
+        required: false
+        type: boolean
+      publish-documentation:
+        default: false
+        description: Update the documentation website?
+        required: false
+        type: boolean
+      publish-github-release:
+        default: false
+        description: Create a GitHub release?
         required: false
         type: boolean
       publish-script:
@@ -33,11 +48,10 @@ on:
         description: npm package registry URL to publish to.
         required: false
         type: string
-      wants-github-release:
-        default: false
-        description: Should we create a GitHub release?
-        required: false
-        type: boolean
+      release-tag:
+        description: Floating release tag to use.
+        type: string
+        required: true
     secrets:
       NPM_TOKEN:
         description: A personal access token to publish the package with.
@@ -54,37 +68,66 @@ jobs:
     name: 🔹Changelog
     uses: ./.github/workflows/frag-changelog.yml
     with:
-      automatic-release-tag: ${{ inputs.is-canary && 'next' || null }}
+      automatic-release-tag: ${{ inputs.release-tag }}
 
-  publish:
+  publish-npm:
     name: Publish npm
     needs:
       - changelog
     uses: ./.github/workflows/frag-publish-npm.yml
     with:
-      is-canary: ${{ inputs.is-canary }}
+      npm-dist-tag: ${{ inputs.release-tag }}
       publish-script: ${{ inputs.publish-script }}
       registry-url: ${{ inputs.registry-url }}
-      version: ${{ inputs.is-canary && needs.changelog.outputs.version-dev-extended || needs.changelog.outputs.version-current }}
-      working-directory: ${{ inputs.working-directory }}
+      version: ${{ ( inputs.is-canary && needs.changelog.outputs.version-patch-dev-extended ) || ( inputs.is-nightly && needs.changelog.outputs.version-patch-nightly-extended ) || needs.changelog.outputs.version-current }}
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-mkdocs:
-    if: inputs.has-mkdocs && !inputs.is-canary
+    if: inputs.publish-documentation && inputs.has-mkdocs
     name: 🔹 MkDocs
+    needs:
+      - publish-npm
     uses: ./.github/workflows/frag-publish-mkdocs.yml
 
-  publish-site:
-    if: inputs.has-github-pages && !inputs.is-canary
+  publish-github-pages:
+    if: inputs.publish-documentation && inputs.has-github-pages
     name: GitHub Pages
     needs:
-      - publish
-    runs-on: ubuntu-24.04
+      - publish-npm
     permissions:
       contents: read
       id-token: write
       pages: write
+    runs-on: ubuntu-24.04
     steps:
       - name: Upload GitHub Pages artifact
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
+
+  publish-github-release:
+    if: inputs.publish-github-release
+    name: Publish GitHub Release
+    needs:
+      - publish-npm
+    permissions:
+      contents: write
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Download changelog
+        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4
+        with:
+          name: changelog.json
+
+      - name: Generate GitHub release
+        uses: oliversalzburg/action-automatic-semantic-releases@db96c81b334bf45a3e971b5d46ee6b63d523a472 # v0.5.6
+        with:
+          automatic-release-tag: ${{ inputs.release-tag }}
+          changelog-artifact: changelog.json
+          draft: ${{ inputs.draft-only }}
+          dry-run: false
+          files: output/*
+          merge-similar: true
+          prerelease: ${{ inputs.is-canary || inputs.is-nightly }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          title: ${{ ( inputs.is-canary && 'Development Build' ) || ( inputs.is-nightly && 'Nightly Build' ) || '' }}v${{ needs.changelog.outputs.version }}
+          with-authors: false
