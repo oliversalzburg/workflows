@@ -12,6 +12,16 @@ on:
         description: The dist-tag to apply to the published npm package. If none is given, "latest" or "dev" are used depending on your `is-canary` setting.
         required: false
         type: string
+      output-artifact:
+        default: output-artifact
+        description: Name of the artifact that will contain the build output.
+        required: false
+        type: string
+      output-path:
+        default: ''
+        description: A file, directory or wildcard pattern that describes the location of build output.
+        required: false
+        type: string
       publish-script:
         default: make
         description: Shell code to run to prepare the package for publishing.
@@ -98,6 +108,13 @@ jobs:
           npm --allow-same-version --ignore-scripts --no-git-tag-version version ${{ inputs.version }}
           npm publish --access=public --provenance --tag=${{ inputs.npm-dist-tag }}
           echo "Published npm package to <${{ env.PUBLISH_URL }}>" >> $GITHUB_STEP_SUMMARY
+
+      - if: inputs.output-path != ''
+        name: Upload output artifact
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4
+        with:
+          name: ${{ inputs.output-artifact }}
+          path: ${{ inputs.output-path }}
 
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3

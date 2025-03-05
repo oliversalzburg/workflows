@@ -77,6 +77,8 @@ jobs:
     uses: ./.github/workflows/frag-publish-npm.yml
     with:
       npm-dist-tag: ${{ inputs.release-tag }}
+      output-artifact: output-artifact
+      output-path: output/*
       publish-script: ${{ inputs.publish-script }}
       registry-url: ${{ inputs.registry-url }}
       version: ${{ ( inputs.is-canary && needs.changelog.outputs.version-patch-dev-extended ) || ( inputs.is-nightly && needs.changelog.outputs.version-patch-nightly-extended ) || needs.changelog.outputs.version-current }}
@@ -117,6 +119,11 @@ jobs:
         uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4
         with:
           name: changelog.json
+
+      - name: Download build output
+        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4
+        with:
+          name: output-artifact
 
       - name: Generate GitHub release
         uses: oliversalzburg/action-automatic-semantic-releases@db96c81b334bf45a3e971b5d46ee6b63d523a472 # v0.5.6
