@@ -115,6 +115,7 @@ jobs:
         with:
           name: ${{ inputs.output-artifact }}
           path: ${{ inputs.output-path }}
+          retention-days: 1
 
       - continue-on-error: true
         name: Upload GitHub Pages artifact

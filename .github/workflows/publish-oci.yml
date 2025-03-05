@@ -163,6 +163,7 @@ jobs:
         with:
           name: ${{ inputs.image-title }}-${{ inputs.image-tag }}.sarif.json
           path: ${{ steps.scan.outputs.sarif }}
+          retention-days: 1
 
       - name: Upload scan report
         if: ${{ inputs.with-sarif }}
