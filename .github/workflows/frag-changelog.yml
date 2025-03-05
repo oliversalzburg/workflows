@@ -35,27 +35,63 @@ on:
       version-current:
         description: Current version in the manifest.
         value: ${{ jobs.changelog.outputs.version-current }}
-      version-extensions:
-        description: Extension that was found on your current manifest version.
-        value: ${{ jobs.changelog.outputs.version-extensions }}
-      version-dev:
-        description: Version number to use for a transient development release.
-        value: ${{ jobs.changelog.outputs.version-dev }}
       version-dev-extended:
         description: Version number to use for a transient development release, including extension.
         value: ${{ jobs.changelog.outputs.version-dev-extended }}
+      version-dev:
+        description: Version number to use for a transient development release.
+        value: ${{ jobs.changelog.outputs.version-dev }}
+      version-extension:
+        description: Extension that was found on your current manifest version.
+        value: ${{ jobs.changelog.outputs.version-extension }}
+      version-major-dev-extended:
+        description: pending
+        value: ${{ jobs.changelog.outputs.version-dev-extended }}
+      version-major-dev:
+        description: pending
+        value: ${{ jobs.changelog.outputs.version-dev }}
+      version-major-nightly-extended:
+        description: pending
+        value: ${{ jobs.changelog.outputs.version-major-nightly-extended }}
+      version-major-nightly:
+        description: pending
+        value: ${{ jobs.changelog.outputs.version-major-nightly }}
       version-major:
         description: Version number to use for a major bump.
         value: ${{ jobs.changelog.outputs.version-major }}
+      version-minor-dev-extended:
+        description: pending
+        value: ${{ jobs.changelog.outputs.version-minor-dev-extended }}
+      version-minor-dev:
+        description: pending
+        value: ${{ jobs.changelog.outputs.version-minor-dev }}
+      version-minor-nightly-extended:
+        description: pending
+        value: ${{ jobs.changelog.outputs.version-minor-nightly-extended }}
+      version-minor-nightly:
+        description: pending
+        value: ${{ jobs.changelog.outputs.version-minor-nightly }}
       version-minor:
         description: Version number to use for a minor bump.
         value: ${{ jobs.changelog.outputs.version-minor }}
-      version-nightly:
-        description: Version number to use for a transient nightly release.
-        value: ${{ jobs.changelog.outputs.version-nightly }}
       version-nightly-extended:
         description: Version number to use for a transient nightly release, including extensions.
         value: ${{ jobs.changelog.outputs.version-nightly-extended }}
+      version-nightly:
+        description: Version number to use for a transient nightly release.
+        value: ${{ jobs.changelog.outputs.version-nightly }}
+      version-patch-dev-extended:
+        description: pending
+        value: ${{ jobs.changelog.outputs.version-patch-dev-extended }}
+      version-patch-dev:
+        description: pending
+        value: ${{ jobs.changelog.outputs.version-patch-dev }}
+      version-patch-nightly-extended:
+        description: pending
+        value: ${{ jobs.changelog.outputs.version-patch-nightly-extended }}
+      version-patch-nightly:
+        description: pending
+        value: ${{ jobs.changelog.outputs.version-patch-nightly }}
       version-patch:
         description: Version number to use for a patch bump.
         value: ${{ jobs.changelog.outputs.version-patch }}
@@ -76,13 +112,25 @@ jobs:
       patch-total: ${{ steps.changelog.outputs.patch-total }}
       upload-url: ${{ steps.changelog.outputs.upload-url }}
       version-current: ${{ steps.changelog.outputs.version-current }}
-      version-extensions: ${{ steps.changelog.outputs.version-extensions }}
-      version-dev: ${{ steps.changelog.outputs.version-dev }}
       version-dev-extended: ${{ steps.changelog.outputs.version-dev-extended }}
+      version-dev: ${{ steps.changelog.outputs.version-dev }}
+      version-extension: ${{ steps.changelog.outputs.version-extension }}
+      version-major-dev-extended: ${{ steps.changelog.outputs.version-major-dev-extended }}
+      version-major-dev: ${{ steps.changelog.outputs.version-major-dev }}
+      version-major-nightly-extended: ${{ steps.changelog.outputs.version-major-nightly-extended }}
+      version-major-nightly: ${{ steps.changelog.outputs.version-major-nightly }}
       version-major: ${{ steps.changelog.outputs.version-major }}
+      version-minor-dev-extended: ${{ steps.changelog.outputs.version-minor-dev-extended }}
+      version-minor-dev: ${{ steps.changelog.outputs.version-minor-dev }}
+      version-minor-nightly-extended: ${{ steps.changelog.outputs.version-minor-nightly-extended }}
+      version-minor-nightly: ${{ steps.changelog.outputs.version-minor-nightly }}
       version-minor: ${{ steps.changelog.outputs.version-minor }}
-      version-nightly: ${{ steps.changelog.outputs.version-nightly }}
       version-nightly-extended: ${{ steps.changelog.outputs.version-nightly-extended }}
+      version-nightly: ${{ steps.changelog.outputs.version-nightly }}
+      version-patch-dev-extended: ${{ steps.changelog.outputs.version-patch-dev-extended }}
+      version-patch-dev: ${{ steps.changelog.outputs.version-patch-dev }}
+      version-patch-nightly-extended: ${{ steps.changelog.outputs.version-patch-nightly-extended }}
+      version-patch-nightly: ${{ steps.changelog.outputs.version-patch-nightly }}
       version-patch: ${{ steps.changelog.outputs.version-patch }}
       version-root: ${{ steps.changelog.outputs.version-root }}
     permissions:
