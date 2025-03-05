@@ -116,5 +116,6 @@ jobs:
           name: ${{ inputs.output-artifact }}
           path: ${{ inputs.output-path }}
 
-      - name: Upload GitHub Pages artifact
+      - continue-on-error: true
+        name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
