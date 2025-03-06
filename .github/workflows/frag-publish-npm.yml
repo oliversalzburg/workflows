@@ -38,6 +38,7 @@ on:
         type: string
     outputs:
       publish-url:
+        description: The registry URL where the package version was published.
         value: ${{ jobs.publish.outputs.publish-url }}
     secrets:
       NPM_TOKEN:
