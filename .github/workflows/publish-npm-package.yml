@@ -129,7 +129,7 @@ jobs:
         uses: oliversalzburg/action-automatic-semantic-releases@67ff1f7a549647789a1395859ebcf84fc5951d01 # v0.5.9
         with:
           automatic-release-tag: ${{ inputs.release-tag }}
-          body-suffix: Published at <${{ jobs.publish-npm.outputs.publish-url }}>
+          body-suffix: Published at <${{ needs.publish-npm.outputs.publish-url }}>
           changelog-artifact: changelog.json
           draft: ${{ inputs.draft-only }}
           dry-run: false
