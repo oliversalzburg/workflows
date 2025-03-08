@@ -64,7 +64,6 @@ jobs:
     needs:
       - changelog
     permissions:
-      actions: read
       contents: write
       id-token: write
       packages: write
@@ -72,12 +71,6 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - name: Collect workflow performance data
-        uses: catchpoint/workflow-telemetry-action@94c3c3d9567a0205de6da68a76c428ce4e769af1 # v2
-        with:
-          comment_on_pr: false
-          theme: dark
-
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
