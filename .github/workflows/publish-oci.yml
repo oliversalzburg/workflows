@@ -90,8 +90,8 @@ jobs:
         with:
           name: ${{ inputs.artifact-name }}
 
-      - name: Extract metadata
-        id: meta
+      - id: meta
+        name: Extract metadata
         uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 # v5.7.0
         with:
           images: ${{ inputs.registry }}/${{ inputs.image-name }}
@@ -115,13 +115,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build ${{ inputs.push && '+ Push' || '' }}
-        uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4 # v6
-        id: build
-        env:
+      - env:
           DOCKER_BUILD_RECORD_UPLOAD: false
           DOCKER_BUILD_SUMMARY: false
           SOURCE_DATE_EPOCH: 0
+        id: build
+        name: Build ${{ inputs.push && '+ Push' || '' }}
+        uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4 # v6
         with:
           build-args: ${{ inputs.build-args }}
           cache-from: type=registry,ref=${{ inputs.registry }}/${{ github.repository }}/cache
@@ -137,8 +137,14 @@ jobs:
           push: ${{ inputs.push }}
           tags: ${{ steps.meta.outputs.tags }}
 
-      - name: Generate SBOM
-        if: ${{ inputs.with-sbom && inputs.push }}
+      - name: Result
+        run: |
+          echo imageid: ${{ steps.build.outputs.imageid }}
+          echo digest: ${{ steps.build.outputs.digest }}
+          echo metadata: ${{ steps.build.outputs.metadata }}
+
+      - if: ${{ inputs.with-sbom && inputs.push }}
+        name: Generate SBOM
         uses: anchore/sbom-action@f325610c9f50a54015d37c8d16cb3b0e2c8f4de0 # v0
         with:
           artifact-name: ${{ inputs.image-title }}-${{ inputs.image-tag }}.sbom.spdx.json
@@ -147,35 +153,35 @@ jobs:
           upload-artifact: true
           upload-release-assets: false
 
-      - name: Grype scan
+      - id: scan
         if: ${{ inputs.with-sarif }}
+        name: Grype scan
         uses: anchore/scan-action@7c05671ae9be166aeb155bad2d7df9121823df32 # v6
-        id: scan
         with:
           add-cpes-if-none: true
           fail-build: false
           image: ${{ inputs.registry }}/${{ inputs.image-name }}:${{ inputs.image-tag }}
           severity-cutoff: critical
 
-      - name: Store SARIF report
-        if: ${{ inputs.with-sarif }}
+      - if: ${{ inputs.with-sarif }}
+        name: Store SARIF report
         uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4
         with:
           name: ${{ inputs.image-title }}-${{ inputs.image-tag }}.sarif.json
           path: ${{ steps.scan.outputs.sarif }}
           retention-days: 1
 
-      - name: Upload scan report
-        if: ${{ inputs.with-sarif }}
-        uses: github/codeql-action/upload-sarif@6bb031afdd8eb862ea3fc1848194185e076637e5 # v3
+      - if: ${{ inputs.with-sarif }}
+        name: Upload scan report
+        uses: github/codeql-action/upload-sarif@b56ba49b26e50535fa1e7f7db0f4f7b4bf65d80d # v3
         with:
           category: ${{ inputs.image-name }}-${{ inputs.image-tag }}
           sarif_file: ${{ steps.scan.outputs.sarif }}
 
-      - name: Upload SBOM attestation
-        uses: actions/attest-sbom@115c3be05ff3974bcbd596578934b3f9ce39bf68 # v2
-        if: ${{ inputs.with-sbom && inputs.with-sbom-attest && inputs.push }}
+      - if: ${{ inputs.with-sbom && inputs.with-sbom-attest && inputs.push }}
         id: attest
+        name: Upload SBOM attestation
+        uses: actions/attest-sbom@115c3be05ff3974bcbd596578934b3f9ce39bf68 # v2
         with:
           subject-name: ${{ inputs.registry }}/${{ inputs.image-name }}
           subject-digest: ${{ steps.build.outputs.digest }}
