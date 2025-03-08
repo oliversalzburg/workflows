@@ -124,11 +124,6 @@ jobs:
         with:
           name: changelog.json
 
-      - name: Download build output
-        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4
-        with:
-          name: output-artifact
-
       - name: Generate GitHub release
         uses: oliversalzburg/action-automatic-semantic-releases@67ff1f7a549647789a1395859ebcf84fc5951d01 # v0.5.9
         with:
