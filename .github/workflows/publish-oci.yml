@@ -9,6 +9,7 @@ on:
         required: false
         type: string
       build-args:
+        description: Additional build arguments to pass to the container builder.
         required: false
         type: string
       containerfile:
@@ -71,10 +72,16 @@ on:
         description: Should we have the SBOM for the image attested?
         required: false
         type: boolean
+    outputs:
+      publish-url:
+        description: The registry URL where the container version was published.
+        value: ${{ jobs.build-publish.outputs.publish-url }}
 
 jobs:
   build-publish:
     name: OCI
+    outputs:
+      publish-url: ${{ steps.details.outputs.publish-url }}
     permissions:
       attestations: write
       contents: read
@@ -142,10 +149,11 @@ jobs:
           push: ${{ inputs.push }}
           tags: ${{ steps.meta.outputs.tags }}
 
-      - name: Result
+      - id: details
+        name: Result
         run: |
-          echo https://${{ inputs.registry }}/${{ inputs.image-name }}@${{ inputs.image-tag }}
-          echo https://${{ inputs.registry }}/${{ inputs.image-name }}@${{ inputs.dist-tag }}
+          PUBLISH_URL="https://${{ inputs.registry }}/${{ inputs.image-name }}@${{ inputs.image-tag }}"
+          echo "publish-url=$PUBLISH_URL" >> "$GITHUB_OUTPUT"
 
       - if: ${{ inputs.with-sbom && inputs.push }}
         name: Generate SBOM
