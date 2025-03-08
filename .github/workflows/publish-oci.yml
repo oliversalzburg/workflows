@@ -83,6 +83,7 @@ jobs:
     outputs:
       publish-url: ${{ steps.details.outputs.publish-url }}
     permissions:
+      actions: read
       attestations: write
       contents: read
       id-token: write

@@ -42,6 +42,7 @@ jobs:
       RELEASE_VERSION: ${{ inputs.is-canary && needs.changelog.outputs.version-dev-extended || needs.changelog.outputs.version-current }}
     name: Browser App
     permissions:
+      actions: read
       contents: read
       packages: read
       pull-requests: read

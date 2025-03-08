@@ -48,6 +48,7 @@ jobs:
     needs:
       - versions
     permissions:
+      actions: read
       contents: read
       packages: read
     runs-on: ${{ matrix.os-release }}

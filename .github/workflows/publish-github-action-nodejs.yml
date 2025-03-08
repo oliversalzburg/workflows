@@ -64,6 +64,7 @@ jobs:
     needs:
       - changelog
     permissions:
+      actions: read
       contents: write
       id-token: write
       packages: write
