@@ -3,15 +3,15 @@ name: Publish mkdocs
 on:
   workflow_call:
     inputs:
-      is-canary:
-        default: true
-        description: "DEPRECATED: Use `npm-dist-tag` instead."
-        required: false
-        type: boolean
-      npm-dist-tag:
+      dist-tag:
         description: The dist-tag to apply to the published npm package. If none is given, "latest" or "dev" are used depending on your `is-canary` setting.
         required: false
         type: string
+      is-canary:
+        default: true
+        description: "DEPRECATED: Use `dist-tag` instead."
+        required: false
+        type: boolean
       output-artifact:
         default: output-artifact
         description: Name of the artifact that will contain the build output.
@@ -50,7 +50,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  NPM_DIST_TAG: ${{ inputs.npm-dist-tag || ( inputs.is-canary && 'dev' || 'latest' ) }}
+  NPM_DIST_TAG: ${{ inputs.dist-tag || ( inputs.is-canary && 'dev' || 'latest' ) }}
   # renovate: datasource=python-version depName=python versioning=python
   PYTHON_VERSION: "3.13.2"
 
@@ -107,7 +107,7 @@ jobs:
         run: |
           ${{ inputs.publish-script }}
           npm --allow-same-version --ignore-scripts --no-git-tag-version version ${{ inputs.version }}
-          npm publish --access=public --provenance --tag=${{ inputs.npm-dist-tag }}
+          npm publish --access=public --provenance --tag=${{ inputs.dist-tag }}
           echo "Published npm package to <${{ env.PUBLISH_URL }}>" >> $GITHUB_STEP_SUMMARY
 
       - if: inputs.output-path != ''
