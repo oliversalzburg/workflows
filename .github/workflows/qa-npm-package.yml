@@ -1,4 +1,4 @@
-name: QA npm Package
+name: QA
 
 on:
   workflow_call:
@@ -44,8 +44,8 @@ jobs:
           echo "NODE_VERSION=${{ env.NODE_VERSION }}" >> $GITHUB_OUTPUT
 
   qa:
-    name: Run QA
-    needs: 
+    name: npm package
+    needs:
       - versions
     permissions:
       contents: read

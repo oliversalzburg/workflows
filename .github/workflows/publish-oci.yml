@@ -1,4 +1,4 @@
-name: Publish OCI
+name: Publish
 
 on:
   workflow_call:

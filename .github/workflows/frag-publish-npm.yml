@@ -1,4 +1,4 @@
-name: Publish mkdocs
+name: Publish
 
 on:
   workflow_call:
@@ -57,7 +57,7 @@ env:
 jobs:
   publish:
     if: inputs.version != ''
-    name: Publish
+    name: npm
     outputs:
       publish-url: ${{ steps.details.outputs.publish-url }}
     permissions:

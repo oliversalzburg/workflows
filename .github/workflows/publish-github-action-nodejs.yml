@@ -60,7 +60,7 @@ jobs:
   publish:
     env:
       RELEASE_VERSION: ${{ inputs.is-canary && needs.changelog.outputs.version-dev-extended || needs.changelog.outputs.version-current }}
-    name: Publish
+    name: GitHub Action Node.js
     needs:
       - changelog
     permissions:

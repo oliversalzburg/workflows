@@ -1,4 +1,4 @@
-name: QA GitHub Action Node.js
+name: QA
 
 on:
   workflow_call:
@@ -9,7 +9,7 @@ env:
 
 jobs:
   qa:
-    name: Run QA
+    name: GitHub Action Node.js
     permissions:
       contents: read
       packages: read

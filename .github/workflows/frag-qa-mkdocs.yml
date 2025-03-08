@@ -1,4 +1,4 @@
-name: QA mkdocs
+name: QA
 
 on:
   workflow_call:
@@ -14,8 +14,8 @@ env:
   PYTHON_VERSION: "3.13.2"
 
 jobs:
-  qa:
-    name: Run QA
+  mkdocs:
+    name: mkdocs
     permissions:
       contents: read
     runs-on: ubuntu-24.04

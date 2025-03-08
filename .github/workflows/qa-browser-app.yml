@@ -1,4 +1,4 @@
-name: QA Browser App
+name: QA
 
 on:
   workflow_call:
@@ -15,7 +15,7 @@ env:
 
 jobs:
   qa:
-    name: Run QA
+    name: Browser App
     permissions:
       contents: read
       packages: read

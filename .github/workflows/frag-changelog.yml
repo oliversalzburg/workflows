@@ -101,7 +101,7 @@ on:
 
 jobs:
   changelog:
-    name: Changelog
+    name: Build
     outputs:
       automatic-releases-tag: ${{ steps.changelog.outputs.automatic-releases-tag }}
       commits-total: ${{ steps.changelog.outputs.commits-total }}

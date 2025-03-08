@@ -65,13 +65,13 @@ env:
 
 jobs:
   changelog:
-    name: 🔹Changelog
+    name: 🔹 Changelog
     uses: ./.github/workflows/frag-changelog.yml
     with:
       automatic-release-tag: ${{ inputs.release-tag }}
 
   publish-npm:
-    name: Publish npm
+    name: npm package
     needs:
       - changelog
     uses: ./.github/workflows/frag-publish-npm.yml
@@ -108,7 +108,7 @@ jobs:
 
   publish-github-release:
     if: inputs.publish-github-release
-    name: Publish GitHub Release
+    name: GitHub Release
     needs:
       - publish-npm
     permissions:

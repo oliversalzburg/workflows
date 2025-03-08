@@ -40,7 +40,7 @@ jobs:
   publish:
     env:
       RELEASE_VERSION: ${{ inputs.is-canary && needs.changelog.outputs.version-dev-extended || needs.changelog.outputs.version-current }}
-    name: Publish
+    name: Browser App
     permissions:
       contents: read
       packages: read

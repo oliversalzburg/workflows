@@ -1,4 +1,4 @@
-name: QA Node.js OCI
+name: QA
 
 on:
   workflow_call:
@@ -40,7 +40,7 @@ env:
 
 jobs:
   qa:
-    name: Run QA
+    name: Node.js OCI
     permissions:
       contents: read
       packages: read
