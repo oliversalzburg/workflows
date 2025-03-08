@@ -73,7 +73,7 @@ jobs:
     name: 🔹 Changelog
     uses: ./.github/workflows/frag-changelog.yml
     with:
-      automatic-release-tag: ${{ ( inputs.is-canary || inputs.is-nightly ) && inputs.release-tag }}
+      automatic-release-tag: ${{ ( inputs.is-canary || inputs.is-nightly ) && inputs.release-tag || '' }}
 
   publish-npm:
     name: npm package
@@ -135,7 +135,7 @@ jobs:
       - name: Generate GitHub release
         uses: oliversalzburg/action-automatic-semantic-releases@67ff1f7a549647789a1395859ebcf84fc5951d01 # v0.5.9
         with:
-          automatic-release-tag: ${{ ( inputs.is-canary || inputs.is-nightly ) && inputs.release-tag }}
+          automatic-release-tag: ${{ ( inputs.is-canary || inputs.is-nightly ) && inputs.release-tag || '' }}
           body-suffix: |
 
             ---
