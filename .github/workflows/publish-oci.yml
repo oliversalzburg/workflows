@@ -21,6 +21,10 @@ on:
         description: The container image build context working-directory.
         required: false
         type: string
+      dist-tag:
+        description: Floating release tag to put on the image.
+        required: false
+        type: string
       image-description:
         description: Value for `org.opencontainers.image.description`.
         required: false
@@ -39,7 +43,7 @@ on:
         type: string
       is-latest:
         default: false
-        description: Should this image also be tagged as 'latest'?
+        description: DEPRECATED! Use dist-tag instead. Should this image also be tagged as 'latest'?
         required: true
         type: boolean
       push:
@@ -103,6 +107,7 @@ jobs:
             org.opencontainers.image.version=${{ inputs.image-tag }}
           tags: |
             type=raw,value=${{ inputs.image-tag }}
+            type=raw,value=${{ inputs.dist-tag || 'ignored' }},enable=${{ inputs.dist-tag != '' }}
             type=raw,value=latest,enable=${{ inputs.is-latest }}
 
       - name: Set up Docker Buildx
@@ -139,9 +144,7 @@ jobs:
 
       - name: Result
         run: |
-          echo imageid: ${{ steps.build.outputs.imageid }}
-          echo digest: ${{ steps.build.outputs.digest }}
-          echo metadata: ${{ steps.build.outputs.metadata }}
+          echo https://${{ inputs.registry }}/${{ inputs.image-name }}@${{ inputs.image-tag }}
 
       - if: ${{ inputs.with-sbom && inputs.push }}
         name: Generate SBOM
