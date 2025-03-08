@@ -28,6 +28,11 @@ on:
         description: Is this a scheduled build?
         required: false
         type: boolean
+      output-path:
+        default: output/*
+        description: A file, directory or wildcard pattern that describes the location of build output.
+        required: false
+        type: string
       publish-documentation:
         default: false
         description: Update the documentation website?
@@ -78,7 +83,7 @@ jobs:
     with:
       dist-tag: ${{ inputs.release-tag }}
       output-artifact: output-artifact
-      output-path: output/*
+      output-path: ${{ inputs.output-path }}
       publish-script: ${{ inputs.publish-script }}
       registry-url: ${{ inputs.registry-url }}
       version: ${{ ( inputs.is-canary && needs.changelog.outputs.version-patch-dev-extended ) || ( inputs.is-nightly && needs.changelog.outputs.version-patch-nightly-extended ) || needs.changelog.outputs.version-current }}
@@ -133,7 +138,7 @@ jobs:
           changelog-artifact: changelog.json
           draft: ${{ inputs.draft-only }}
           dry-run: false
-          files: output/*
+          files: ${{ inputs.output-path }}
           merge-similar: true
           prerelease: ${{ inputs.is-canary || inputs.is-nightly }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
