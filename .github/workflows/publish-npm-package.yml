@@ -113,6 +113,7 @@ jobs:
     if: inputs.publish-github-release
     name: GitHub Release
     needs:
+      - changelog
       - publish-npm
     permissions:
       contents: write
@@ -139,5 +140,14 @@ jobs:
           merge-similar: true
           prerelease: ${{ inputs.is-canary || inputs.is-nightly }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          title: ${{ ( inputs.is-canary && 'Development Build' ) || ( inputs.is-nightly && 'Nightly Build' ) || '' }}v${{ needs.changelog.outputs.version }}
+          title: >-
+            ${{
+              ( inputs.is-canary && 'Development Build' ) ||
+              ( inputs.is-nightly && 'Nightly Build' ) ||
+              ''
+            }}v${{
+              ( inputs.is-canary && needs.changelog.outputs.version-patch-dev-extended ) ||
+              ( inputs.is-nightly && needs.changelog.outputs.version-patch-nightly-extended ) ||
+              needs.changelog.outputs.version-current
+            }}
           with-authors: false
