@@ -75,10 +75,10 @@ on:
     outputs:
       publish-url:
         description: The registry URL where the container version was published.
-        value: ${{ jobs.build-publish.outputs.publish-url }}
+        value: ${{ jobs.publish.outputs.publish-url }}
 
 jobs:
-  build-publish:
+  publish:
     name: OCI
     outputs:
       publish-url: ${{ steps.details.outputs.publish-url }}
@@ -91,6 +91,12 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
+      - name: Collect workflow performance data
+        uses: catchpoint/workflow-telemetry-action@v2
+        with:
+          comment_on_pr: false
+          theme: dark
+
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
