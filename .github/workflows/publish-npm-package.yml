@@ -76,7 +76,7 @@ jobs:
       - changelog
     uses: ./.github/workflows/frag-publish-npm.yml
     with:
-      npm-dist-tag: ${{ inputs.release-tag }}
+      dist-tag: ${{ inputs.release-tag }}
       output-artifact: output-artifact
       output-path: output/*
       publish-script: ${{ inputs.publish-script }}
