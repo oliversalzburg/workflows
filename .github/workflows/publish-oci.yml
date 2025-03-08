@@ -152,8 +152,11 @@ jobs:
       - id: details
         name: Result
         run: |
+          DIST_URL="https://${{ inputs.registry }}/${{ inputs.image-name }}@${{ inputs.dist-tag }}"
           PUBLISH_URL="https://${{ inputs.registry }}/${{ inputs.image-name }}@${{ inputs.image-tag }}"
           echo "publish-url=$PUBLISH_URL" >> "$GITHUB_OUTPUT"
+          echo "Published OCI to <$PUBLISH_URL>" >> $GITHUB_STEP_SUMMARY
+          echo "Tagged OCI as <$DIST_URL>" >> $GITHUB_STEP_SUMMARY
 
       - if: ${{ inputs.with-sbom && inputs.push }}
         name: Generate SBOM
