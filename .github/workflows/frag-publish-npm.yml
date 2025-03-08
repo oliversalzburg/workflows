@@ -97,6 +97,10 @@ jobs:
         run: |
           PACKAGE_NAME=$(jq --raw-output .name package.json)
           echo "PACKAGE_NAME=$PACKAGE_NAME" | tee $GITHUB_ENV
+          
+          DIST_URL=https://www.npmjs.com/package/$PACKAGE_NAME/v/${{ inputs.dist-tag }}
+          echo "dist-url=$DIST_URL" >> $GITHUB_OUTPUT
+
           PUBLISH_URL=https://www.npmjs.com/package/$PACKAGE_NAME/v/${{ inputs.version }}
           echo "PUBLISH_URL=$PUBLISH_URL" | tee $GITHUB_ENV
           echo "publish-url=$PUBLISH_URL" >> $GITHUB_OUTPUT
@@ -108,7 +112,8 @@ jobs:
           ${{ inputs.publish-script }}
           npm --allow-same-version --ignore-scripts --no-git-tag-version version ${{ inputs.version }}
           npm publish --access=public --provenance --tag=${{ inputs.dist-tag }}
-          echo "Published npm package to <${{ env.PUBLISH_URL }}>" >> $GITHUB_STEP_SUMMARY
+          echo "Published npm package to <${{ steps.details.outputs.publish-url }}>" >> $GITHUB_STEP_SUMMARY
+          echo "Tagged npm package as <${{ steps.details.outputs.dist-url }}>" >> $GITHUB_STEP_SUMMARY
 
       - if: inputs.output-path != ''
         name: Upload output artifact
