@@ -44,7 +44,7 @@ on:
       is-latest:
         default: false
         description: DEPRECATED! Use dist-tag instead. Should this image also be tagged as 'latest'?
-        required: true
+        required: false
         type: boolean
       push:
         default: false
@@ -145,6 +145,7 @@ jobs:
       - name: Result
         run: |
           echo https://${{ inputs.registry }}/${{ inputs.image-name }}@${{ inputs.image-tag }}
+          echo https://${{ inputs.registry }}/${{ inputs.image-name }}@${{ inputs.dist-tag }}
 
       - if: ${{ inputs.with-sbom && inputs.push }}
         name: Generate SBOM
