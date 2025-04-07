@@ -150,12 +150,12 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           title: >-
             ${{
-              ( inputs.is-canary && 'Development Build' ) ||
-              ( inputs.is-nightly && 'Nightly Build' ) ||
+              ( inputs.is-nightly && 'Nightly Build ' ) ||
+              ( inputs.is-canary && 'Development Build ' ) ||
               ''
             }}v${{
-              ( inputs.is-canary && needs.changelog.outputs.version-patch-dev-extended ) ||
               ( inputs.is-nightly && needs.changelog.outputs.version-patch-nightly-extended ) ||
+              ( inputs.is-canary && needs.changelog.outputs.version-patch-dev-extended ) ||
               needs.changelog.outputs.version-current
             }}
           with-authors: false
