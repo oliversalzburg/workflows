@@ -52,7 +52,7 @@ concurrency:
 env:
   NPM_DIST_TAG: ${{ inputs.dist-tag || ( inputs.is-canary && 'dev' || 'latest' ) }}
   # renovate: datasource=python-version depName=python versioning=python
-  PYTHON_VERSION: "3.13.2"
+  PYTHON_VERSION: "3.13.3"
 
 jobs:
   publish:
