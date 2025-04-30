@@ -171,7 +171,7 @@ jobs:
       - id: scan
         if: ${{ inputs.with-sarif }}
         name: Grype scan
-        uses: anchore/scan-action@7c05671ae9be166aeb155bad2d7df9121823df32 # v6
+        uses: anchore/scan-action@2c901ab7378897c01b8efaa2d0c9bf519cc64b9e # v6
         with:
           add-cpes-if-none: true
           fail-build: false
