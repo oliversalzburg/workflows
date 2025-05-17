@@ -73,9 +73,9 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Enable Corepack
+      - name: Enable Yarn
         run: |
-          npm install --global corepack
+          npm install --global yarn
           yarn config set enableGlobalCache false
 
       - name: Load cached dependencies
