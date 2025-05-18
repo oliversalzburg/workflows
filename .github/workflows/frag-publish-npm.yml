@@ -111,7 +111,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           ${{ inputs.publish-script }}
-          npm --allow-same-version --ignore-scripts --no-git-tag-version version ${{ inputs.version }}
+          npm --allow-same-version --ignore-scripts --no-git-tag-version version "${{ inputs.version }}"
           npm publish --access=public --provenance --tag=${{ inputs.dist-tag }}
           echo "Published npm package to <${{ steps.details.outputs.publish-url }}>" >> $GITHUB_STEP_SUMMARY
           echo "Tagged npm package as <${{ steps.details.outputs.dist-url }}>" >> $GITHUB_STEP_SUMMARY
