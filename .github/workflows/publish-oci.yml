@@ -196,7 +196,7 @@ jobs:
       - if: ${{ inputs.with-sbom && inputs.with-sbom-attest && inputs.push }}
         id: attest
         name: Upload SBOM attestation
-        uses: actions/attest-sbom@115c3be05ff3974bcbd596578934b3f9ce39bf68 # v2
+        uses: actions/attest-sbom@bd218ad0dbcb3e146bd073d1d9c6d78e08aa8a0b # v2
         with:
           subject-name: ${{ inputs.registry }}/${{ inputs.image-name }}
           subject-digest: ${{ steps.build.outputs.digest }}
