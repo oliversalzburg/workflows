@@ -60,7 +60,7 @@ jobs:
           registry-url: ${{ inputs.registry-url }}
 
       - name: Setup Graphviz
-        uses: ts-graphviz/setup-graphviz@v2
+        uses: ts-graphviz/setup-graphviz@b1de5da23ed0a6d14e0aeee8ed52fdd87af2363c # v2
 
       - name: Load cached dependencies
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
