@@ -59,9 +59,6 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           registry-url: ${{ inputs.registry-url }}
 
-      - name: Setup Graphviz
-        uses: ts-graphviz/setup-graphviz@v2
-
       - name: Load cached dependencies
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
         with:
