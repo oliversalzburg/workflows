@@ -84,7 +84,7 @@ jobs:
       dist-tag: ${{ inputs.release-tag }}
       publish-script: ${{ inputs.publish-script }}
       registry-url: ${{ inputs.registry-url }}
-      version: ${{ ( inputs.is-canary && needs.changelog.outputs.version-patch-extended-dev ) || ( inputs.is-nightly && needs.changelog.outputs.version-patch-extended-nightly ) || needs.changelog.outputs.version-current }}
+      version: ${{ ( inputs.is-nightly && needs.changelog.outputs.version-patch-extended-nightly ) || ( inputs.is-canary && needs.changelog.outputs.version-patch-extended-dev ) || needs.changelog.outputs.version-current }}
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
