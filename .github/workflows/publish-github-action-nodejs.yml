@@ -102,7 +102,7 @@ jobs:
 
       - name: Generate SBOM
         if: success() && inputs.wants-github-release
-        uses: anchore/sbom-action@43a17d6e7add2b5535efe4dcae9952337c479a93 # v0
+        uses: anchore/sbom-action@a930d0ac434e3182448fe678398ba5713717112a # v0
         with:
           format: spdx-json
           output-file: sbom.spdx.json
