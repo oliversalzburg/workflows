@@ -54,8 +54,8 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - 18
           - 20
+          - 22
           - ${{ needs.versions.outputs.NODE_LTS_VERSION }}
           - ${{ needs.versions.outputs.NODE_VERSION }}
         os-release:
