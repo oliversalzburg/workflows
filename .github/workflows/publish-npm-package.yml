@@ -133,7 +133,7 @@ jobs:
           name: changelog.json
 
       - name: Generate GitHub release
-        uses: oliversalzburg/action-automatic-semantic-releases@8c730c0e3341d4290c3110cc1fa4e73aa9955f06 # v3.0.0
+        uses: oliversalzburg/action-automatic-semantic-releases@cd2e6c8f8c99ed8a6ae42d26f03ce7dc63bd8999 # v3.1.0
         with:
           automatic-release-tag: ${{ ( inputs.is-canary || inputs.is-nightly ) && inputs.release-tag || '' }}
           body-suffix: |
