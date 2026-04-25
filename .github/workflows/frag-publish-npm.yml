@@ -49,6 +49,8 @@ concurrency:
   cancel-in-progress: false
 
 env:
+  # renovate: datasource=node-version depName=node versioning=node
+  NODE_VERSION: "24.15.0"
   NPM_DIST_TAG: ${{ inputs.dist-tag || ( inputs.is-canary && 'dev' || 'latest' ) }}
   # renovate: datasource=python-version depName=python versioning=python
   PYTHON_VERSION: "3.14.4"
@@ -78,6 +80,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           registry-url: ${{ inputs.registry-url }}
 
+      - run: npm install -g npm@latest
+
       - name: Load cached dependencies
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
         with:
@@ -101,7 +105,6 @@ jobs:
       - name: Publish package
         run: |
           ${{ inputs.publish-script }}
-          npm install npm@latest
           npm --allow-same-version --ignore-scripts --no-git-tag-version version "${{ inputs.version }}"
           npm publish --access=public --provenance --tag=${{ inputs.dist-tag }}
           echo "Published npm package to <${{ steps.details.outputs.publish-url }}>" >> $GITHUB_STEP_SUMMARY
