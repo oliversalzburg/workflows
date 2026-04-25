@@ -101,6 +101,7 @@ jobs:
       - name: Publish package
         run: |
           ${{ inputs.publish-script }}
+          npm install npm@latest
           npm --allow-same-version --ignore-scripts --no-git-tag-version version "${{ inputs.version }}"
           npm publish --access=public --provenance --tag=${{ inputs.dist-tag }}
           echo "Published npm package to <${{ steps.details.outputs.publish-url }}>" >> $GITHUB_STEP_SUMMARY
