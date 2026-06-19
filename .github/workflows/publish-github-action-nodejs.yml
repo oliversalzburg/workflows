@@ -116,7 +116,7 @@ jobs:
 
       - name: Generate GitHub release
         if: success() && inputs.wants-github-release
-        uses: oliversalzburg/action-automatic-semantic-releases@e5c0634af48374e2b64958d126c2fbbff148ced5 # main
+        uses: oliversalzburg/action-automatic-semantic-releases@a131075569e554752c5a661cd69833674166d47f # main
         with:
           automatic-release-tag: ${{ inputs.is-canary && 'next' || null }}
           draft: ${{ inputs.draft-only }}
