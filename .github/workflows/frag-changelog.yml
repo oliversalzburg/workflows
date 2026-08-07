@@ -224,7 +224,7 @@ jobs:
 
       - id: changelog
         name: Generate changelog
-        uses: oliversalzburg/action-automatic-semantic-releases@da6bbf679bab8b63524b775d029828ce856ceee0 # main
+        uses: oliversalzburg/action-automatic-semantic-releases@dce93526954df2dbab7c7c67f4795d99d91ee24d # main
         with:
           automatic-release-tag: ${{ inputs.automatic-release-tag }}
           changelog-artifact: changelog.json
