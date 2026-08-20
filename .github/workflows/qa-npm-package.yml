@@ -52,6 +52,7 @@ jobs:
       packages: read
     runs-on: ${{ matrix.os-release }}
     strategy:
+      fail-fast: false
       matrix:
         node-version:
           - 22
