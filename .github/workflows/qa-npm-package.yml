@@ -71,14 +71,14 @@ jobs:
       - name: Select Node.js version
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
-          node-version: ${{ matrix.NODE_VERSION }}
+          node-version: ${{ matrix.node-version }}
 
       - name: Load cached dependencies
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node{{ matrix.NODE_VERSION }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-node${{ matrix.NODE_VERSION }}
+          key: ${{ runner.os }}-node{{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node${{ matrix.node-version }}
 
       - name: Build, lint, test
         run: |
