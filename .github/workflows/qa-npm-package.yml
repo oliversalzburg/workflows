@@ -28,7 +28,7 @@ env:
   # renovate: datasource=node-version depName=node versioning=node
   NODE_LTS_VERSION: "24.21.0"
   # renovate: datasource=node-version depName=node versioning=node
-  NODE_VERSION: "26.8.2"
+  NODE_VERSION: "26.9.0"
 
 jobs:
   versions:
