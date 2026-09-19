@@ -40,7 +40,7 @@ jobs:
       - qa-nodejs-oci
     permissions:
       contents: read
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - name: Failure
         if: ${{ contains(needs.*.result, 'failure') }}
