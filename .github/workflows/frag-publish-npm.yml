@@ -50,7 +50,7 @@ concurrency:
 
 env:
   # renovate: datasource=node-version depName=node versioning=node
-  NODE_VERSION: "24.22.1"
+  NODE_VERSION: "26.13.0"
   NPM_DIST_TAG: ${{ inputs.dist-tag || ( inputs.is-canary && 'dev' || 'latest' ) }}
   # renovate: datasource=python-version depName=python versioning=python
   PYTHON_VERSION: "3.15.2"
